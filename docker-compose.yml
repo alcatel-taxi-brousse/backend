@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:bullseye
+    environment:
+      POSTGRES_USER: taxi_brousse
+      POSTGRES_PASSWORD: taxi_brousse
+      POSTGRES_DB: taxi_brousse
+    ports:
+      - "5432:5432"
