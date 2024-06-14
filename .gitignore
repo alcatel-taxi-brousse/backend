@@ -1,3 +1,8 @@
 /node_modules/
 .idea/
 database.sql
+
+/bun.lockb
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
