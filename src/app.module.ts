@@ -2,35 +2,49 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
-import { rainbowConfig } from './rainbow-config';
-import * as process from 'node:process';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
+import { AppConfig } from './app.config';
+import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/config';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true })],
+  imports: [ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] })],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: RainbowSDK,
-      useFactory: async () => {
-        const sdk = new RainbowSDK({
-          ...rainbowConfig,
+      useFactory: async (
+        service: ConfigService<ConfigType<typeof AppConfig>>,
+      ) => {
+        const appConfig = service.get('rainbow', { infer: true });
+        const rainbowConfig = {
+          ...defaultRainbowConfig,
           rainbow: {
-            host: process.env.RAINBOW_HOST || 'sandbox',
+            host: appConfig.host,
           },
           credentials: {
-            login: process.env.RAINBOW_LOGIN || 'login',
-            password: process.env.RAINBOW_PASSWORD || 'password',
+            login: appConfig.login,
+            password: appConfig.password,
           },
           application: {
-            appID: process.env.RAINBOW_APP_ID || 'appID',
-            appSecret: process.env.RAINBOW_APP_SECRET || 'secret',
+            appID: appConfig.appID,
+            appSecret: appConfig.appSecret,
           },
-        });
+          webinar: {
+            start_up: false,
+          },
+          rbvoice: {
+            start_up: false,
+          },
+          rpcoverxmpp: {
+            start_up: false,
+          },
+        };
+        const sdk = new RainbowSDK(rainbowConfig);
         await sdk.start();
         return sdk;
       },
+      inject: [ConfigService],
     },
   ],
 })
