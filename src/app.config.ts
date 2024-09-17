@@ -6,4 +6,5 @@ export const AppConfig = () => ({
     appID: process.env.RAINBOW_APP_ID || 'appId',
     appSecret: process.env.RAINBOW_APP_SECRET || 'secret',
   },
+  logLevel: process.env.LOG_LEVEL || 'log',
 });
