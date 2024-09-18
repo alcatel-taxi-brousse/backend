@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
@@ -16,6 +16,7 @@ import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/conf
       useFactory: async (
         service: ConfigService<ConfigType<typeof AppConfig>>,
       ) => {
+        const logger = new Logger('RainbowSDK');
         const appConfig = service.get('rainbow', { infer: true });
         const rainbowConfig = {
           ...defaultRainbowConfig,
@@ -42,6 +43,7 @@ import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/conf
         };
         const sdk = new RainbowSDK(rainbowConfig);
         await sdk.start();
+        logger.log(`Connected to ${appConfig.host}`);
         return sdk;
       },
       inject: [ConfigService],

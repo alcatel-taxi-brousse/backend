@@ -26,6 +26,7 @@ $ pnpm run start:prod
 | RAINBOW_PASSWORD   | Rainbow password                             | `password`   |
 | RAINBOW_APP_ID     | Rainbow application ID                       | `app_id`     |
 | RAINBOW_APP_SECRET | Rainbow application secret                   | `app_secret` |
+| LOG_LEVEL          | A comma separated string of levels to log    | `log`        |
 
 
 ## Test
