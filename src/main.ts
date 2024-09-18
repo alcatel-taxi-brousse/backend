@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppLogger } from './common/services/app-logger.service';
 import { ConfigService } from '@nestjs/config';
-import { LogLevel } from '@nestjs/common';
+import { LogLevel, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +13,7 @@ async function bootstrap() {
     .split(',') as LogLevel[];
   const logger = new AppLogger();
   logger.setLogLevels(logLevels);
+  app.useGlobalPipes(new ValidationPipe());
   app.useLogger(logger);
 
   await app.listen(3000);

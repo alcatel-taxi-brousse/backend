@@ -5,9 +5,13 @@ import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from './app.config';
 import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] })],
+  imports: [
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
+  ],
   controllers: [AppController],
   providers: [
     AppService,
