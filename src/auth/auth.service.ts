@@ -13,7 +13,7 @@ export class AuthService {
     private readonly httpService: HttpService,
   ) {}
 
-  private readonly url = `https://${this.configService.get('rainbow.host', { infer: true })}/api/rainbow/authentication/v1.0/login`;
+  private readonly url = `https://${this.configService.get('rainbow.host', { infer: true })}/api/rainbow/authentication/v1.0`;
 
   async login(email: string, password: string) {
     const id = this.configService.get('rainbow.appID', { infer: true });
@@ -23,7 +23,7 @@ export class AuthService {
     const appAuth = this.encryptApplication(id, secret, password);
 
     const response = await lastValueFrom(
-      this.httpService.get<LoginResponse>(this.url, {
+      this.httpService.get<LoginResponse>(`${this.url}/login`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -37,13 +37,25 @@ export class AuthService {
     return response.data;
   }
 
-  encryptApplication(id: string, secret: string, password: string) {
+  async checkTokenValidity(token: string) {
+    const response = await lastValueFrom(
+      this.httpService.get<{ status: string }>(`${this.url}/validator`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      }),
+    );
+    return response.data;
+  }
+
+  private encryptApplication(id: string, secret: string, password: string) {
     const toEncrypt = secret + password;
     const encrypted = createHash('sha-256').update(toEncrypt).digest('hex');
     return btoa(id + ':' + encrypted);
   }
 
-  encryptUser(email: string, password: string) {
+  private encryptUser(email: string, password: string) {
     return btoa(email + ':' + password);
   }
 }

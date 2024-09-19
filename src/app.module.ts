@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from './app.config';
 import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/config';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [
     AppService,
+    { provide: APP_GUARD, useClass: AuthGuard },
     {
       provide: RainbowSDK,
       useFactory: async (
