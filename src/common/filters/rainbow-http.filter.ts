@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { AxiosError } from 'axios';
-import { RainbowHttpError } from '../models/rainbow-http.error';
+import { RainbowHttpError } from '../errors/rainbow-http.error';
 import { Response } from 'express';
 
 @Catch(AxiosError)
