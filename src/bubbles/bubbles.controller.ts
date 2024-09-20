@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { BubblesService } from './bubbles.service';
 import { Bubble } from 'rainbow-node-sdk/lib/common/models/Bubble';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('bubbles')
 @ApiBearerAuth()
@@ -9,8 +9,10 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 export class BubblesController {
   constructor(private readonly appService: BubblesService) {}
 
+  /**
+   * Get all bubbles in the instance
+   */
   @Get()
-  @ApiOperation({ summary: 'Get all bubbles in the instance' })
   getBubbles(): Bubble[] {
     return this.appService.getBubbles();
   }
