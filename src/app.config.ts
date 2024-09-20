@@ -14,4 +14,7 @@ export const AppConfig = () => ({
     appSecret: process.env.RAINBOW_APP_SECRET || 'secret',
   },
   logLevel: process.env.LOG_LEVEL || 'log',
+  enableSwagger: process.env.ENABLE_SWAGGER
+    ? process.env.ENABLE_SWAGGER.toLowerCase() === 'true'
+    : false,
 });
