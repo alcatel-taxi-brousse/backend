@@ -2,8 +2,9 @@ import { Body, Controller, Logger, Optional, Post } from '@nestjs/common';
 import { LoginDto } from './login.dto';
 import { AuthService } from './auth.service';
 import { Public } from '../common/decorators/public.decorator';
-import { ApiBasicAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -14,7 +15,6 @@ export class AuthController {
 
   @Public()
   @Post()
-  @ApiBasicAuth()
   @ApiOperation({
     summary: 'Log a user in and return data containing their JWT token',
   })

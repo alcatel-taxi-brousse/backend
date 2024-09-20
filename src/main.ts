@@ -30,7 +30,6 @@ function enableSwaggerEndpoint(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Taxi-Brousse API')
     .setDescription('An API to connect Rainbow API and Taxi-Brousse client')
-    .addBasicAuth()
     .addBearerAuth()
     .build();
 
