@@ -1,6 +1,7 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { Bubble } from 'rainbow-node-sdk/lib/common/models/Bubble';
+import { BubbleCreationDto } from './bubble-creation.dto';
 
 @Injectable()
 export class BubblesService {
@@ -13,5 +14,15 @@ export class BubblesService {
   getBubbles(): Bubble[] {
     this.logger.verbose('Getting all bubbles');
     return this.rainbow.bubbles.getAllBubbles();
+  }
+
+  async createBubble(dto: BubbleCreationDto): Promise<Bubble> {
+    const { name, description, withHistory } = dto;
+    const created = await this.rainbow.bubbles.createBubble(
+      name,
+      description,
+      withHistory,
+    );
+    return created as Bubble;
   }
 }

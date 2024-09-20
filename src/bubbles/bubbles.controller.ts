@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { BubblesService } from './bubbles.service';
 import { Bubble } from 'rainbow-node-sdk/lib/common/models/Bubble';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { BubbleCreationDto } from './bubble-creation.dto';
 
 @ApiTags('bubbles')
 @ApiBearerAuth()
@@ -15,5 +16,14 @@ export class BubblesController {
   @Get()
   getBubbles(): Bubble[] {
     return this.appService.getBubbles();
+  }
+
+  /**
+   * Create a new bubble
+   * @param dto
+   */
+  @Post()
+  createBubble(@Body() dto: BubbleCreationDto): Promise<Bubble> {
+    return this.appService.createBubble(dto);
   }
 }
