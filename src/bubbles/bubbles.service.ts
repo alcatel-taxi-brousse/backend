@@ -3,11 +3,11 @@ import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { Bubble } from 'rainbow-node-sdk/lib/common/models/Bubble';
 
 @Injectable()
-export class AppService {
+export class BubblesService {
   constructor(
     private readonly rainbow: RainbowSDK,
     @Optional()
-    private readonly logger = new Logger(AppService.name),
+    private readonly logger = new Logger(BubblesService.name),
   ) {}
 
   getBubbles(): Bubble[] {

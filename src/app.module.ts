@@ -1,6 +1,6 @@
 import { Logger, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { BubblesController } from './bubbles/bubbles.controller';
+import { BubblesService } from './bubbles/bubbles.service';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from './app.config';
@@ -8,9 +8,9 @@ import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/conf
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] })],
-  controllers: [AppController],
+  controllers: [BubblesController],
   providers: [
-    AppService,
+    BubblesService,
     {
       provide: RainbowSDK,
       useFactory: async (
