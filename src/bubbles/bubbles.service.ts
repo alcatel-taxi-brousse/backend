@@ -18,11 +18,12 @@ export class BubblesService {
 
   async createBubble(dto: BubbleCreationDto): Promise<Bubble> {
     const { name, description, withHistory } = dto;
-    const created = await this.rainbow.bubbles.createBubble(
+    const created = (await this.rainbow.bubbles.createBubble(
       name,
       description,
       withHistory,
-    );
-    return created as Bubble;
+    )) as Bubble;
+    this.logger.verbose(`Created bubble ${created.name}`);
+    return created;
   }
 }
