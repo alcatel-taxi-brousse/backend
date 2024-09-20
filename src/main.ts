@@ -2,9 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppLogger } from './common/services/app-logger.service';
 import { ConfigService, ConfigType } from '@nestjs/config';
-import { INestApplication, LogLevel } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppConfig } from './app.config';
+import { INestApplication, LogLevel, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +16,7 @@ async function bootstrap() {
     .split(',') as LogLevel[];
   const logger = new AppLogger();
   logger.setLogLevels(logLevels);
+  app.useGlobalPipes(new ValidationPipe());
   app.useLogger(logger);
   const enableSwagger = configService.get('enableSwagger', { infer: true });
   if (enableSwagger) {
@@ -29,6 +30,8 @@ function enableSwaggerEndpoint(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Taxi-Brousse API')
     .setDescription('An API to connect Rainbow API and Taxi-Brousse client')
+    .addBasicAuth()
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
