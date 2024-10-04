@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from './index';
+import sequelize from './index.js';
 import User from './User'; 
 
 const Trip = sequelize.define('Trip', {

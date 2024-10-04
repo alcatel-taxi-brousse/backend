@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from './index';  
+import sequelize from './index.js';  
 import Group from './Group';  
 import Trip from './Trip';  
 

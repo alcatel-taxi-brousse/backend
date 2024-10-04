@@ -1,4 +1,4 @@
-import sequelize from './db/models/index';
+const sequelize = require('./db/models/index.js')
 
 sequelize.sync({ force: true })
     .then(() => {
