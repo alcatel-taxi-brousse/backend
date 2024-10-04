@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
-import sequelize from './index.js'; 
+ import db from './index.js'; 
 import User from './User'; 
 import Trip from './Trip';  
 
-const User_Trip = sequelize.define('User_Trip', {
+const User_Trip = db.define('User_Trip', {
     user_id: {
         type: DataTypes.INTEGER,
         references: {

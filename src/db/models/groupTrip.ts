@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
-import sequelize from './index.js';  
+import db from './index.js';  
 import Group from './Group';  
 import Trip from './Trip';  
 
-const Group_Trip = sequelize.define('Group_Trip', {
+const Group_Trip = db.define('Group_Trip', {
     group_id: {
         type: DataTypes.INTEGER,
         references: {

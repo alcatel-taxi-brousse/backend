@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize-typescript';
 
 const sequelize = new Sequelize('taxibrousse', process.env.username, process.env.password, {
     host: process.env.host,
@@ -7,4 +7,4 @@ const sequelize = new Sequelize('taxibrousse', process.env.username, process.env
     port: 5432,
 });
 
-module.exports = sequelize;
+export default sequelize;

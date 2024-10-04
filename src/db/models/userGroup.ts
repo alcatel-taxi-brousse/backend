@@ -1,9 +1,9 @@
 import { DataTypes } from 'sequelize';
-import sequelize from './index.js'; 
+ import db from './index.js'; 
 import User from './User';  
 import Group from './Group'; 
 
-const User_Group = sequelize.define('User_Group', {
+const User_Group = db.define('User_Group', {
     user_id: {
         type: DataTypes.INTEGER,
         references: {
