@@ -23,6 +23,7 @@ async function bootstrap() {
     enableSwaggerEndpoint(app);
   }
 
+  app.enableShutdownHooks();
   await app.listen(3000);
 }
 

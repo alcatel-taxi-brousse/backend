@@ -20,8 +20,6 @@ export class AuthController {
   @Post()
   async login(@Body() dto: LoginDto) {
     const { email, password } = dto;
-    const data = await this.authService.login(email, password);
-    this.logger.verbose(`User ${data.loggedInUser.id} logged in`);
-    return data;
+    await this.authService.login(email, password);
   }
 }

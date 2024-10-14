@@ -3,6 +3,7 @@ import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { Bubble } from 'rainbow-node-sdk/lib/common/models/Bubble';
 import { BubbleCreationDto } from './bubble-creation.dto';
 
+//FIXME: Use the SDK corresponding to the user's login
 @Injectable()
 export class BubblesService {
   constructor(

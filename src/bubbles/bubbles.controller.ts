@@ -8,14 +8,14 @@ import { BubbleCreationDto } from './bubble-creation.dto';
 @ApiBearerAuth()
 @Controller('bubbles')
 export class BubblesController {
-  constructor(private readonly appService: BubblesService) {}
+  constructor(private readonly bubblesService: BubblesService) {}
 
   /**
    * Get all bubbles in the instance
    */
   @Get()
   getBubbles(): Bubble[] {
-    return this.appService.getBubbles();
+    return this.bubblesService.getBubbles();
   }
 
   /**
@@ -24,6 +24,6 @@ export class BubblesController {
    */
   @Post()
   createBubble(@Body() dto: BubbleCreationDto): Promise<Bubble> {
-    return this.appService.createBubble(dto);
+    return this.bubblesService.createBubble(dto);
   }
 }
