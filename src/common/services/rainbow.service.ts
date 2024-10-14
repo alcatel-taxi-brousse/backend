@@ -3,6 +3,7 @@ import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/config';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from '../../app.config';
+import { NotFoundError } from '../errors/not-found.error';
 
 @Injectable()
 export class RainbowService implements OnApplicationShutdown {
@@ -49,14 +50,14 @@ export class RainbowService implements OnApplicationShutdown {
 
   async getSDK(login: string) {
     if (!this.sdks.has(login)) {
-      throw new Error(`No SDK found for ${login}`);
+      throw new NotFoundError(`No SDK found for ${login}`);
     }
     return this.sdks.get(login);
   }
 
   async closeSDK(login: string) {
     if (!this.sdks.has(login)) {
-      throw new Error(`No SDK found for ${login}`);
+      throw new NotFoundError(`No SDK found for ${login}`);
     }
     const sdk = this.sdks.get(login);
     await sdk.stop();
