@@ -5,13 +5,22 @@ import {
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
-import { Logger, Optional, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Logger,
+  Optional,
+  UseFilters,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './login.dto';
 import { NotFoundError } from '../common/errors/not-found.error';
+import { Socket } from 'socket.io';
+import { WsValidationFilter } from '../common/filters/ws-validation.filter';
 
 @WebSocketGateway()
 @UsePipes(ValidationPipe)
+@UseFilters(new WsValidationFilter())
 export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly authService: AuthService,
@@ -19,12 +28,12 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private readonly logger = new Logger(AuthGateway.name),
   ) {}
 
-  handleDisconnect(client: any) {
+  handleDisconnect(client: Socket) {
     this.logger.verbose(`Client disconnected: ${client.id}`);
   }
 
-  handleConnection(client: any, data: string) {
-    this.logger.verbose(`Client connected: ${client.id} data: ${data}`);
+  handleConnection(client: Socket, data: string) {
+    this.logger.verbose(`Client connected: ${client.id}`);
   }
 
   @SubscribeMessage('login')
