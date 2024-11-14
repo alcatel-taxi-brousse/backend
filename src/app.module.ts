@@ -8,13 +8,21 @@ import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/conf
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { UserController } from './user/user.controller';
+import { GroupController } from './group/group.controller';
+import { TripController } from './trip/trip.controller';
 
 @Module({
   imports: [
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
   ],
-  controllers: [AppController],
+  controllers: [
+    AppController,
+    UserController,
+    GroupController,
+    TripController,
+  ],
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: AuthGuard },
