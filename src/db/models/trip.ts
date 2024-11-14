@@ -1,40 +1,24 @@
-import { DataTypes } from 'sequelize';
-import db from '../db';
-import User from './User'; 
+import { Table, Column, Model, PrimaryKey, AutoIncrement, BelongsToMany, ForeignKey } from 'sequelize-typescript';
+import User from './User';
+import Group from './Group';
+import User_Trip from './UserTrip';
+import Group_Trip from './GroupTrip';
 
-const Trip = db.define('Trip', {
-    trip_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    start_location: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-    },
-    frequence: {
-        type: DataTypes.STRING,
-    },
-    nb_seats_car: {
-        type: DataTypes.INTEGER,
-    },
-    description: {
-        type: DataTypes.TEXT,
-    },
-    creator_user_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: User, 
-            key: 'user_id',
-        },
-    },
-}, {
-    tableName: 'Trip',
-    timestamps: false,
-});
+@Table({ tableName: 'Trip', timestamps: false })
+class Trip extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column
+    trip_id!: number;
+
+    @Column
+    start_location!: string;
+
+    @BelongsToMany(() => User, () => User_Trip)
+    users!: User[];
+
+    @BelongsToMany(() => Group, () => Group_Trip)
+    groups!: Group[];
+}
 
 export default Trip;

@@ -1,19 +1,24 @@
-import { DataTypes } from 'sequelize';
- import db from './index.js'; 
+import { Table, Column, Model, PrimaryKey, AutoIncrement, BelongsToMany } from 'sequelize-typescript';
+import Group from './Group';
+import Trip from './Trip';
+import User_Group from './UserGroup';
+import User_Trip from './UserTrip';
 
-const User = db.define('UserTable', {
-    user_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-}, {
-    tableName: 'UserTable',
-    timestamps: false
-});
+@Table({ tableName: 'UserTable', timestamps: false })
+class User extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column
+    user_id!: number;
+
+    @Column
+    name!: string;
+
+    @BelongsToMany(() => Group, () => User_Group)
+    groups!: Group[];
+
+    @BelongsToMany(() => Trip, () => User_Trip)
+    trips!: Trip[];
+}
 
 export default User;

@@ -1,37 +1,24 @@
-import { DataTypes } from 'sequelize';
- import db from './index.js'; 
-import User from './User'; 
+import { Table, Column, Model, PrimaryKey, AutoIncrement, BelongsToMany } from 'sequelize-typescript';
+import User from './User';
+import Trip from './Trip';
+import User_Group from './UserGroup';
+import Group_Trip from './GroupTrip';
 
-const Group = db.define('GroupTable', {
-    group_id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    description: {
-        type: DataTypes.TEXT,
-    },
-    destination: {
-        type: DataTypes.STRING,
-    },
-    private: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-    },
-    join_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: User,  
-            key: 'user_id',
-        },
-    },
-}, {
-    tableName: 'GroupTable',
-    timestamps: false,
-});
+@Table({ tableName: 'GroupTable', timestamps: false })
+class Group extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column
+    group_id!: number;
+
+    @Column
+    name!: string;
+
+    @BelongsToMany(() => User, () => User_Group)
+    users!: User[];
+
+    @BelongsToMany(() => Trip, () => Group_Trip)
+    trips!: Trip[];
+}
 
 export default Group;

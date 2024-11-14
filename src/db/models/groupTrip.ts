@@ -1,26 +1,16 @@
-import { DataTypes } from 'sequelize';
-import db from './index.js';  
-import Group from './Group';  
-import Trip from './Trip';  
+import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
+import Group from './Group';
+import Trip from './Trip';
 
-const Group_Trip = db.define('Group_Trip', {
-    group_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Group,
-            key: 'group_id',
-        },
-    },
-    trip_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Trip,
-            key: 'trip_id',
-        },
-    },
-}, {
-    tableName: 'Group_Trip',
-    timestamps: false,
-});
+@Table({ tableName: 'Group_Trip', timestamps: false })
+class Group_Trip extends Model {
+    @ForeignKey(() => Group)
+    @Column
+    group_id!: number;
+
+    @ForeignKey(() => Trip)
+    @Column
+    trip_id!: number;
+}
 
 export default Group_Trip;
