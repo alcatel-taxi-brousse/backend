@@ -1,5 +1,5 @@
-import { BubblesController } from './bubbles/bubbles.controller';
-import { BubblesService } from './bubbles/bubbles.service';
+import { CommunityController } from './community/community.controller';
+import { CommunityService } from './community/community.service';
 import { Logger, Module } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
@@ -20,13 +20,13 @@ import { DatabaseModule } from './db/database.module';
     DatabaseModule,
   ],
   controllers: [
-    BubblesController,
+    CommunityController,
     UserController,
     GroupController,
     TripController,
   ],
   providers: [
-    BubblesService,
+    CommunityService,
     { provide: APP_GUARD, useClass: AuthGuard },
     {
       provide: RainbowSDK,

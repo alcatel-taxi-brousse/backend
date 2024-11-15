@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BubblesController } from './bubbles/bubbles.controller';
-import { BubblesService } from './bubbles/bubbles.service';
+import { CommunityController } from './community/community.controller';
+import { CommunityService } from './community/community.service';
 
 describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [BubblesController],
-      providers: [BubblesService],
+      controllers: [CommunityController],
+      providers: [CommunityService],
     }).compile();
   });
 
