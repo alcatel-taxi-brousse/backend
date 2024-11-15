@@ -1,12 +1,12 @@
 import { Sequelize } from 'sequelize-typescript';
 import * as pgtools from 'pgtools';
 import { Logger } from '@nestjs/common';
-import User from './models/User';
-import Group from './models/Group';
-import Trip from './models/Trip';
-import User_Group from './models/UserGroup';
-import Group_Trip from './models/GroupTrip';
-import User_Trip from './models/UserTrip';
+import User from './models/User.model';
+import Group from './models/Group.model';
+import Trip from './models/Trip.model';
+import User_Group from './models/UserGroup.model';
+import Group_Trip from './models/GroupTrip.model';
+import User_Trip from './models/UserTrip.model';
 
 export const databaseProviders = [
   {

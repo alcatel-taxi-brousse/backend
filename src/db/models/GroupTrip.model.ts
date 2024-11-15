@@ -1,6 +1,6 @@
-import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
-import Group from './Group';
-import Trip from './Trip';
+import { Table, Model, ForeignKey, Column } from 'sequelize-typescript';
+import Group from './Group.model';
+import Trip from './Trip.model';
 
 @Table({ tableName: 'Group_Trip', timestamps: false })
 class Group_Trip extends Model {

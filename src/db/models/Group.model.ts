@@ -6,10 +6,10 @@ import {
   AutoIncrement,
   BelongsToMany,
 } from 'sequelize-typescript';
-import User from './User';
-import Trip from './Trip';
-import User_Group from './UserGroup';
-import Group_Trip from './GroupTrip';
+import User from './User.model';
+import Trip from './Trip.model';
+import User_Group from './UserGroup.model';
+import Group_Trip from './GroupTrip.model';
 
 @Table({ tableName: 'Group', timestamps: false })
 class Group extends Model {
@@ -20,6 +20,18 @@ class Group extends Model {
 
   @Column
   name!: string;
+
+  @Column
+  description!: string;
+
+  @Column
+  destination!: string;
+
+  @Column
+  private!: boolean;
+
+  @Column
+  join_id!: number;
 
   @BelongsToMany(() => User, () => User_Group)
   users!: User[];

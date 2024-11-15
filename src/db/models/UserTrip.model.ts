@@ -1,6 +1,6 @@
 import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
-import User from './User';
-import Trip from './Trip';
+import User from './User.model';
+import Trip from './Trip.model';
 
 @Table({ tableName: 'User_Trip', timestamps: false })
 class User_Trip extends Model {
