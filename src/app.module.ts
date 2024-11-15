@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Logger, Module, OnApplicationBootstrap } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
@@ -11,6 +11,14 @@ import { AuthGuard } from './auth/auth.guard';
 import { UserController } from './user/user.controller';
 import { GroupController } from './group/group.controller';
 import { TripController } from './trip/trip.controller';
+import { Sequelize } from 'sequelize-typescript';
+import * as pgtools from 'pgtools';
+import User from './db/models/User';
+import Group from './db/models/Group';
+import Trip from './db/models/Trip';
+import User_Group from './db/models/UserGroup';
+import Group_Trip from './db/models/GroupTrip';
+import User_Trip from './db/models/UserTrip';
 
 @Module({
   imports: [
@@ -65,4 +73,51 @@ import { TripController } from './trip/trip.controller';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  private readonly logger = new Logger(AppModule.name);
+  private sequelize: Sequelize;
+
+  constructor(private readonly configService: ConfigService) {}
+
+  async onApplicationBootstrap() {
+    const dbName = 'taxibrousse';
+    const dbConfig = {
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT || 5432),
+    };
+
+    try {
+      await pgtools.createdb(dbConfig, dbName);
+      this.logger.log(`Database "${dbName}" created successfully.`);
+    } catch (err: any) {
+      if (err.name === 'duplicate_database') {
+        this.logger.log(`Database "${dbName}" already exists.`);
+      } else {
+        this.logger.error('Error creating the database:', err);
+        throw err; 
+      }
+    }
+
+    this.sequelize = new Sequelize({
+      dialect: 'postgres',
+      host: dbConfig.host,
+      port: dbConfig.port,
+      username: dbConfig.user,
+      password: dbConfig.password,
+      database: dbName,
+      logging: false, 
+    });
+
+    this.sequelize.addModels([User, Group, Trip, User_Group, Group_Trip, User_Trip]);
+
+    try {
+      await this.sequelize.sync({ alter: true });
+      this.logger.log('Database schema synchronized successfully.');
+    } catch (error) {
+      this.logger.error('Error synchronizing the database schema:', error);
+      throw error;
+    }
+  }
+}

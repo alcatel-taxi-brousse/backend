@@ -4,7 +4,7 @@ import Trip from './Trip';
 import User_Group from './UserGroup';
 import User_Trip from './UserTrip';
 
-@Table({ tableName: 'UserTable', timestamps: false })
+@Table({ tableName: 'User', timestamps: false })
 class User extends Model {
     @PrimaryKey
     @AutoIncrement
