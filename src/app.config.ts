@@ -3,7 +3,17 @@ const hosts = {
   official: 'openrainbow.com',
 };
 
-export const AppConfig = () => ({
+export const AppConfig = (): {
+  rainbow: {
+    host: string;
+    login: string;
+    password: string;
+    appID: string;
+    appSecret: string;
+  };
+  logLevel: string;
+  enableSwagger: boolean;
+} => ({
   rainbow: {
     host:
       (hosts[process.env.RAINBOW_HOST] || process.env.RAINBOW_HOST) ??

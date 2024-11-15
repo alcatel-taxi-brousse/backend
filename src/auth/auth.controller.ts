@@ -3,6 +3,7 @@ import { LoginDto } from './login.dto';
 import { AuthService } from './auth.service';
 import { Public } from '../common/decorators/public.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { LoginResponse } from './login-response.model';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -18,7 +19,7 @@ export class AuthController {
    */
   @Public()
   @Post()
-  async login(@Body() dto: LoginDto) {
+  async login(@Body() dto: LoginDto): Promise<LoginResponse> {
     const { email, password } = dto;
     const data = await this.authService.login(email, password);
     this.logger.verbose(`User ${data.loggedInUser.id} logged in`);

@@ -7,27 +7,27 @@ export class AppLogger extends ConsoleLogger implements LoggerService {
     this.setContext(context);
   }
 
-  log(message: any, context?: string) {
+  log(message: any, context?: string): void {
     super.log(message, context ?? this.context);
   }
 
-  verbose(message: any, context?: string) {
+  verbose(message: any, context?: string): void {
     super.verbose(message, context ?? this.context);
   }
 
-  warn(message: any, context?: string) {
+  warn(message: any, context?: string): void {
     super.warn(message, context ?? this.context);
   }
 
-  debug(message: any, context?: string) {
+  debug(message: any, context?: string): void {
     super.debug(message, context ?? this.context);
   }
 
-  fatal(message: any, context?: string) {
+  fatal(message: any, context?: string): void {
     super.fatal(message, context ?? this.context);
   }
 
-  error(message: any, stack?: string, context?: string) {
+  error(message: any, stack?: string, context?: string): void {
     super.error(message, stack, context ?? this.context);
   }
 }
