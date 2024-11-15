@@ -6,7 +6,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppConfig } from './app.config';
 import { INestApplication, LogLevel, ValidationPipe } from '@nestjs/common';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService =
@@ -31,7 +30,6 @@ function enableSwaggerEndpoint(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('Taxi-Brousse API')
     .setDescription('An API to connect Rainbow API and Taxi-Brousse client')
-    .addBasicAuth()
     .addBearerAuth()
     .build();
 

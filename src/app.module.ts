@@ -1,6 +1,6 @@
-import { Logger, Module, OnApplicationBootstrap } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { BubblesController } from './bubbles/bubbles.controller';
+import { BubblesService } from './bubbles/bubbles.service';
+import { Logger, Module } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from './app.config';
@@ -13,22 +13,21 @@ import { GroupController } from './group/group.controller';
 import { TripController } from './trip/trip.controller';
 import { DatabaseModule } from './db/database.module';
 
-
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }), 
-    AuthModule, 
-    DatabaseModule, 
+    ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
+    AuthModule,
+    DatabaseModule,
   ],
   controllers: [
-    AppController,
+    BubblesController,
     UserController,
     GroupController,
     TripController,
   ],
   providers: [
-    AppService,
-    { provide: APP_GUARD, useClass: AuthGuard }, 
+    BubblesService,
+    { provide: APP_GUARD, useClass: AuthGuard },
     {
       provide: RainbowSDK,
       useFactory: async (
@@ -49,9 +48,15 @@ import { DatabaseModule } from './db/database.module';
             appID: appConfig.appID,
             appSecret: appConfig.appSecret,
           },
-          webinar: { start_up: false },
-          rbvoice: { start_up: false },
-          rpcoverxmpp: { start_up: false },
+          webinar: {
+            start_up: false,
+          },
+          rbvoice: {
+            start_up: false,
+          },
+          rpcoverxmpp: {
+            start_up: false,
+          },
         };
 
         const sdk = new RainbowSDK(rainbowConfig);

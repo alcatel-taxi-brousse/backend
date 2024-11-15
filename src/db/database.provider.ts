@@ -29,7 +29,7 @@ export const databaseProviders = [
           logger.log(`Database "${dbName}" already exists.`);
         } else {
           logger.error('Error creating the database:', err);
-          throw err; 
+          throw err;
         }
       }
 
@@ -43,7 +43,14 @@ export const databaseProviders = [
         logging: false,
       });
 
-      sequelize.addModels([User, Group, Trip, User_Group, Group_Trip, User_Trip]);
+      sequelize.addModels([
+        User,
+        Group,
+        Trip,
+        User_Group,
+        Group_Trip,
+        User_Trip,
+      ]);
 
       try {
         await sequelize.sync({ alter: true });
