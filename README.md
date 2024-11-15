@@ -27,7 +27,11 @@ $ pnpm run start:prod
 | RAINBOW_APP_ID     | Rainbow application ID                                                        | `app_id`     |
 | RAINBOW_APP_SECRET | Rainbow application secret                                                    | `app_secret` |
 | LOG_LEVEL          | A comma separated string of levels to log                                     | `log`        |
-| ENABLE_SWAGGER     | Enable Swagger documentation                 | `false`      |
+| ENABLE_SWAGGER     | Enable Swagger documentation                                                  | `false`      |
+| DB_USER            | DB Username                                                    | `user`     |
+| DB_PASSWORD        | DB Password                                                 | `password` |
+| DB_HOST            | DB Host                                    | `localhost`        |
+| DB_PORT            | BD Port                                                  | `5432`      |
 
 
 ## Test

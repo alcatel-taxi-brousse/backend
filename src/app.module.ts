@@ -1,6 +1,6 @@
-import { Logger, Module } from '@nestjs/common';
 import { BubblesController } from './bubbles/bubbles.controller';
 import { BubblesService } from './bubbles/bubbles.service';
+import { Logger, Module } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from './app.config';
@@ -8,23 +8,33 @@ import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/conf
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { UserController } from './user/user.controller';
+import { GroupController } from './group/group.controller';
+import { TripController } from './trip/trip.controller';
+import { DatabaseModule } from './db/database.module';
 
 @Module({
   imports: [
-    AuthModule,
     ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
+    AuthModule,
+    DatabaseModule,
   ],
-  controllers: [BubblesController],
+  controllers: [
+    BubblesController,
+    UserController,
+    GroupController,
+    TripController,
+  ],
   providers: [
     BubblesService,
     { provide: APP_GUARD, useClass: AuthGuard },
     {
       provide: RainbowSDK,
       useFactory: async (
-        service: ConfigService<ConfigType<typeof AppConfig>>,
+        configService: ConfigService<ConfigType<typeof AppConfig>>,
       ) => {
         const logger = new Logger('RainbowSDK');
-        const appConfig = service.get('rainbow', { infer: true });
+        const appConfig = configService.get('rainbow', { infer: true });
         const rainbowConfig = {
           ...defaultRainbowConfig,
           rainbow: {
@@ -48,6 +58,7 @@ import { AuthGuard } from './auth/auth.guard';
             start_up: false,
           },
         };
+
         const sdk = new RainbowSDK(rainbowConfig);
         await sdk.start();
         logger.log(`Connected to ${appConfig.host}`);
