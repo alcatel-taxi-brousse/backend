@@ -1,11 +1,11 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Logger, Provider } from '@nestjs/common';
-import User from './models/User.model';
-import Group from './models/Group.model';
-import Trip from './models/Trip.model';
-import User_Group from './models/UserGroup.model';
-import Group_Trip from './models/GroupTrip.model';
-import User_Trip from './models/UserTrip.model';
+import { User } from './entities/user.entity';
+import { Group } from './entities/group.entity';
+import { Trip } from './entities/trip.entity';
+import { GroupTrip } from './entities/group-trip.entity';
+import { UserTrip } from './entities/user-trip.entity';
+import { UserGroup } from './entities/user-group.entity';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from '../app.config';
 
@@ -24,7 +24,7 @@ export const databaseProvider: Provider = {
       ...dbConfig,
     });
 
-    sequelize.addModels([User, Group, Trip, User_Group, Group_Trip, User_Trip]);
+    sequelize.addModels([User, Group, Trip, UserGroup, GroupTrip, UserTrip]);
 
     try {
       await sequelize.sync({ alter: true });

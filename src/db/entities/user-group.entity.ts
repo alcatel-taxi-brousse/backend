@@ -1,16 +1,14 @@
 import { Table, Model, ForeignKey, Column } from 'sequelize-typescript';
-import User from './User.model';
-import Group from './Group.model';
+import { User } from './user.entity';
+import { Group } from './group.entity';
 
 @Table({ tableName: 'User_Group', timestamps: false })
-class User_Group extends Model {
+export class UserGroup extends Model {
   @ForeignKey(() => User)
   @Column
-  user_id!: number;
+  user_id: number;
 
   @ForeignKey(() => Group)
   @Column
-  group_id!: number;
+  group_id: number;
 }
-
-export default User_Group;

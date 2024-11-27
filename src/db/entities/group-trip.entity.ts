@@ -1,16 +1,14 @@
 import { Table, Model, ForeignKey, Column } from 'sequelize-typescript';
-import Group from './Group.model';
-import Trip from './Trip.model';
+import { Group } from './group.entity';
+import { Trip } from './trip.entity';
 
 @Table({ tableName: 'Group_Trip', timestamps: false })
-class Group_Trip extends Model {
+export class GroupTrip extends Model {
   @ForeignKey(() => Group)
   @Column
-  group_id!: number;
+  group_id: number;
 
   @ForeignKey(() => Trip)
   @Column
-  trip_id!: number;
+  trip_id: number;
 }
-
-export default Group_Trip;
