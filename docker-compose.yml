@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: taxibrousse
+      POSTGRES_PASSWORD: rainbow
+      POSTGRES_DB: taxibrousse
+    volumes:
+      - db:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  db:
