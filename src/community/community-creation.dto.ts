@@ -1,6 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class BubbleCreationDto {
+export class CommunityCreationDto {
   @IsNotEmpty()
   @IsString()
   name: string;

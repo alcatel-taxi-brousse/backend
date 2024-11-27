@@ -5,7 +5,7 @@ import { Response } from 'express';
 
 @Catch(AxiosError)
 export class RainbowHttpFilter implements ExceptionFilter {
-  catch(exception: AxiosError<RainbowHttpError>, host: ArgumentsHost) {
+  catch(exception: AxiosError<RainbowHttpError>, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.response?.status || 500;

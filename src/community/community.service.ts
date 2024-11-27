@@ -1,29 +1,29 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
-import { Bubble } from 'rainbow-node-sdk/lib/common/models/Bubble';
-import { BubbleCreationDto } from './bubble-creation.dto';
+import { CommunityCreationDto } from './community-creation.dto';
+import { Community } from './models/community.model';
 
 @Injectable()
-export class BubblesService {
+export class CommunityService {
   constructor(
     private readonly rainbow: RainbowSDK,
     @Optional()
-    private readonly logger = new Logger(BubblesService.name),
+    private readonly logger = new Logger(CommunityService.name),
   ) {}
 
-  getBubbles(): Bubble[] {
-    this.logger.verbose('Getting all bubbles');
+  getCommunities(): Community[] {
+    this.logger.verbose('Getting all community');
     return this.rainbow.bubbles.getAllBubbles();
   }
 
-  async createBubble(dto: BubbleCreationDto): Promise<Bubble> {
+  async createCommunity(dto: CommunityCreationDto): Promise<Community> {
     const { name, description, withHistory } = dto;
     const created = (await this.rainbow.bubbles.createBubble(
       name,
       description,
       withHistory,
-    )) as Bubble;
-    this.logger.verbose(`Created bubble ${created.name}`);
+    )) as Community;
+    this.logger.verbose(`Created community ${created.name}`);
     return created;
   }
 }
