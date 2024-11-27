@@ -37,7 +37,7 @@ export class AuthService {
     return response.data;
   }
 
-  async checkTokenValidity(token: string) {
+  async checkTokenValidity(token: string): Promise<{ status: string }> {
     const response = await lastValueFrom(
       this.httpService.get<{ status: string }>(`${this.url}/validator`, {
         headers: {

@@ -32,7 +32,7 @@ import { DatabaseModule } from './db/database.module';
       provide: RainbowSDK,
       useFactory: async (
         configService: ConfigService<ConfigType<typeof AppConfig>>,
-      ) => {
+      ): Promise<RainbowSDK> => {
         const logger = new Logger('RainbowSDK');
         const appConfig = configService.get('rainbow', { infer: true });
         const rainbowConfig = {
