@@ -11,6 +11,7 @@ import { User } from './user.entity';
 import { Group } from './group.entity';
 import { UserTrip } from './user-trip.entity';
 import { GroupTrip } from './group-trip.entity';
+import { Expose } from 'class-transformer';
 
 @Table({ tableName: 'Trip', timestamps: false })
 export class Trip extends Model {
@@ -44,7 +45,7 @@ export class Trip extends Model {
   @BelongsToMany(() => Group, () => GroupTrip)
   groups: Group[];
 
-  // Pas de virtual
+  @Expose({ toPlainOnly: true })
   get nb_people(): number {
     return this.users ? this.users.length : 0;
   }
