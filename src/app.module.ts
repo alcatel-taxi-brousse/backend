@@ -1,5 +1,5 @@
 import { CommunityController } from './community/community.controller';
-import { CommunityService } from './community/community.service';
+import { CommunityService } from './community/services/community.service';
 import { Logger, Module } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
@@ -10,25 +10,19 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UserController } from './user/user.controller';
 import { GroupController } from './group/group.controller';
-import { TripController } from './trip/trip.controller';
 import { DatabaseModule } from './db/database.module';
-import { TripModule } from './trip/trip.module';
+import { TripService } from './community/services/trip.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
     AuthModule,
     DatabaseModule,
-    TripModule,
   ],
-  controllers: [
-    CommunityController,
-    UserController,
-    GroupController,
-    TripController,
-  ],
+  controllers: [CommunityController, UserController, GroupController],
   providers: [
     CommunityService,
+    TripService,
     { provide: APP_GUARD, useClass: AuthGuard },
     {
       provide: RainbowSDK,

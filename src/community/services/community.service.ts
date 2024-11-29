@@ -1,7 +1,7 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
-import { CommunityCreationDto } from './community-creation.dto';
-import { Community } from './models/community.model';
+import { CommunityCreationDto } from '../dtos/community-creation.dto';
+import { Community } from '../models/community.model';
 
 @Injectable()
 export class CommunityService {
