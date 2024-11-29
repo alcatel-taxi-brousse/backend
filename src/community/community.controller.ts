@@ -26,4 +26,13 @@ export class CommunityController {
   createCommunity(@Body() dto: CommunityCreationDto): Promise<Community> {
     return this.communityService.createCommunity(dto);
   }
+
+  /**
+   * 
+   * Sync the communities between Rainbow and the DB 
+   */
+  @Get('/sync-groups')
+  async syncCommunitiesToGroups(): Promise<void> {
+    return this.communityService.syncCommunitiesToGroups();
+  }
 }
