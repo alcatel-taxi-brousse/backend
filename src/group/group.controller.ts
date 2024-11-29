@@ -42,8 +42,4 @@ export class GroupController {
     throw new NotImplementedException();
   }
 
-  @Get(':id/trips')
-  async findTripsByGroup(@Param('id') id: string): Promise<Trip[]> {
-    return this.groupService.findTripsByGroup(id);
-  }
 }

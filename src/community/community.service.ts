@@ -2,6 +2,9 @@ import { Injectable, Logger, Optional } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { CommunityCreationDto } from './community-creation.dto';
 import { Community } from './models/community.model';
+import { Group } from 'src/db/entities/group.entity';
+import { Trip } from 'src/db/entities/trip.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class CommunityService {
@@ -25,5 +28,21 @@ export class CommunityService {
     )) as Community;
     this.logger.verbose(`Created community ${created.name}`);
     return created;
+  }
+
+  async findTripsByGroup(id: string): Promise<Trip[]> {
+    this.logger.verbose(`Fetching trips for group with id ${id}`);
+    const group = await Group.findByPk(id, {
+      include: {
+        model: Trip,
+        through: { attributes: [] }, 
+      },
+    });
+
+    if (!group) {
+      throw new NotFoundException(`Group with id ${id} not found`);
+    }
+
+    return group.trips;
   }
 }
