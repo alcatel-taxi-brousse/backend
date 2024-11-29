@@ -6,11 +6,11 @@ import {
   AutoIncrement,
   BelongsToMany,
   ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 import { Group } from './group.entity';
 import { UserTrip } from './user-trip.entity';
-import { GroupTrip } from './group-trip.entity';
 import { Expose } from 'class-transformer';
 
 @Table({ tableName: 'Trip', timestamps: false })
@@ -39,11 +39,15 @@ export class Trip extends Model {
   @Column
   creator_user_id: number;
 
+  @ForeignKey(() => Group)
+  @Column
+  group_id: number;
+
+  @BelongsTo(() => Group)
+  group: Group;
+
   @BelongsToMany(() => User, () => UserTrip)
   users: User[];
-
-  @BelongsToMany(() => Group, () => GroupTrip)
-  groups: Group[];
 
   @Expose({ toPlainOnly: true })
   get nb_people(): number {

@@ -13,6 +13,7 @@ import { GroupController } from './group/group.controller';
 import { TripController } from './trip/trip.controller';
 import { DatabaseModule } from './db/database.module';
 import { GroupModule } from './group/group.module';
+import { TripModule } from './trip/trip.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { GroupModule } from './group/group.module';
     AuthModule,
     DatabaseModule,
     GroupModule
+    TripModule,
   ],
   controllers: [
     CommunityController,
