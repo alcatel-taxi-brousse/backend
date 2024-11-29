@@ -5,6 +5,7 @@ import {
   PrimaryKey,
   AutoIncrement,
   BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import { User } from './user.entity';
 import { Trip } from './trip.entity';
@@ -36,6 +37,6 @@ export class Group extends Model {
   @BelongsToMany(() => User, () => UserGroup)
   users: User[];
 
-  @BelongsToMany(() => Trip, () => GroupTrip)
+  @HasMany(() => Trip, 'group_id')
   trips: Trip[];
 }

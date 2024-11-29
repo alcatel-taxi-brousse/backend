@@ -7,24 +7,36 @@ import {
   Param,
   Body,
   NotImplementedException,
+  Logger,
+  Optional,
 } from '@nestjs/common';
 import { Trip } from '../db/entities/trip.entity';
+import { TripService } from './trip.service';
+import { CreateTripDto } from './dto/create-trip.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('trips')
 @Controller('trips')
 export class TripController {
+  constructor(
+    private readonly tripService: TripService,
+    @Optional()
+    private readonly logger = new Logger(TripController.name),
+  ) {}
+
   @Get()
-  findAll(): Trip {
-    throw new NotImplementedException();
+  findAll(): Promise<Trip[]> {
+    return this.tripService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Trip {
-    throw new NotImplementedException();
+  findOne(@Param('id') id: string): Promise<Trip> {
+    return this.tripService.findOne(id);
   }
 
   @Post()
-  create(@Body() createTripDto: any): Trip {
-    throw new NotImplementedException();
+  create(@Body() createTripDto: CreateTripDto): Promise<Trip> {
+    return this.tripService.create(createTripDto);
   }
 
   @Put(':id')
