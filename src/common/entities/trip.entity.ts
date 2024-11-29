@@ -8,13 +8,13 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { User } from './user.entity';
-import { Group } from './group.entity';
-import { UserTrip } from './user-trip.entity';
+import { UserEntity } from './user.entity';
+import { CommunityEntity } from './community.entity';
+import { UserTripEntity } from './user-trip.entity';
 import { Expose } from 'class-transformer';
 
 @Table({ tableName: 'Trip', timestamps: false })
-export class Trip extends Model {
+export class TripEntity extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column
@@ -35,19 +35,19 @@ export class Trip extends Model {
   @Column
   description: string;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => UserEntity)
   @Column
   creator_user_id: number;
 
-  @ForeignKey(() => Group)
+  @ForeignKey(() => CommunityEntity)
   @Column
-  group_id: number;
+  community_id: number;
 
-  @BelongsTo(() => Group)
-  group: Group;
+  @BelongsTo(() => CommunityEntity)
+  community: CommunityEntity;
 
-  @BelongsToMany(() => User, () => UserTrip)
-  users: User[];
+  @BelongsToMany(() => UserEntity, () => UserTripEntity)
+  users: UserEntity[];
 
   @Expose({ toPlainOnly: true })
   get nb_people(): number {

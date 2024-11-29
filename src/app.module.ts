@@ -1,67 +1,38 @@
-import { CommunityController } from './community/community.controller';
-import { CommunityService } from './community/services/community.service';
 import { Logger, Module } from '@nestjs/common';
-import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { ConfigModule, ConfigService, ConfigType } from '@nestjs/config';
 import { AppConfig } from './app.config';
-import { config as defaultRainbowConfig } from 'rainbow-node-sdk/lib/config/config';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UserController } from './user/user.controller';
-import { GroupController } from './group/group.controller';
-import { DatabaseModule } from './db/database.module';
-import { TripService } from './community/services/trip.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { CommunityModule } from './community/community.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
     AuthModule,
-    DatabaseModule,
-  ],
-  controllers: [CommunityController, UserController, GroupController],
-  providers: [
-    CommunityService,
-    TripService,
-    { provide: APP_GUARD, useClass: AuthGuard },
-    {
-      provide: RainbowSDK,
+    CommonModule,
+    CommunityModule,
+    SequelizeModule.forRootAsync({
       useFactory: async (
         configService: ConfigService<ConfigType<typeof AppConfig>>,
-      ): Promise<RainbowSDK> => {
-        const logger = new Logger('RainbowSDK');
-        const appConfig = configService.get('rainbow', { infer: true });
-        const rainbowConfig = {
-          ...defaultRainbowConfig,
-          rainbow: {
-            host: appConfig.host,
-          },
-          credentials: {
-            login: appConfig.login,
-            password: appConfig.password,
-          },
-          application: {
-            appID: appConfig.appID,
-            appSecret: appConfig.appSecret,
-          },
-          webinar: {
-            start_up: false,
-          },
-          rbvoice: {
-            start_up: false,
-          },
-          rpcoverxmpp: {
-            start_up: false,
-          },
+      ) => {
+        const logger = new Logger('Sequelize');
+        return {
+          dialect: 'postgres',
+          ...configService.get('db', { infer: true }),
+          logging: (sql: string): void => logger.verbose(sql),
+          autoLoadModels: true,
+          synchronize: true,
         };
-
-        const sdk = new RainbowSDK(rainbowConfig);
-        await sdk.start();
-        logger.log(`Connected to ${appConfig.host}`);
-        return sdk;
       },
+      imports: [ConfigModule],
       inject: [ConfigService],
-    },
+    }),
   ],
+  controllers: [UserController],
+  providers: [{ provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}

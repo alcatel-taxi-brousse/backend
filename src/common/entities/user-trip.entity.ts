@@ -1,14 +1,14 @@
 import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
-import { User } from './user.entity';
-import { Trip } from './trip.entity';
+import { UserEntity } from './user.entity';
+import { TripEntity } from './trip.entity';
 
 @Table({ tableName: 'User_Trip', timestamps: false })
-export class UserTrip extends Model {
-  @ForeignKey(() => User)
+export class UserTripEntity extends Model {
+  @ForeignKey(() => UserEntity)
   @Column
   user_id: number;
 
-  @ForeignKey(() => Trip)
+  @ForeignKey(() => TripEntity)
   @Column
   trip_id: number;
 

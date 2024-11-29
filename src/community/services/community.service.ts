@@ -1,12 +1,22 @@
-import { Injectable, Logger, Optional } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  Optional,
+} from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
 import { CommunityCreationDto } from '../dtos/community-creation.dto';
 import { Community } from '../models/community.model';
+import { TripEntity } from '../../common/entities/trip.entity';
+import { CommunityEntity } from '../../common/entities/community.entity';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class CommunityService {
   constructor(
     private readonly rainbow: RainbowSDK,
+    @InjectModel(CommunityEntity)
+    private readonly communityModel: typeof CommunityEntity,
     @Optional()
     private readonly logger = new Logger(CommunityService.name),
   ) {}
@@ -27,12 +37,12 @@ export class CommunityService {
     return created;
   }
 
-  async findTripsByGroup(id: string): Promise<Trip[]> {
+  async findTripsByGroup(id: string): Promise<TripEntity[]> {
     this.logger.verbose(`Fetching trips for group with id ${id}`);
-    const group = await Group.findByPk(id, {
+    const group = await this.communityModel.findByPk(id, {
       include: {
-        model: Trip,
-        through: { attributes: [] }, 
+        model: TripEntity,
+        through: { attributes: [] },
       },
     });
 

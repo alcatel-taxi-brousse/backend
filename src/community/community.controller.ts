@@ -3,7 +3,7 @@ import { CommunityService } from './services/community.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CommunityCreationDto } from './dtos/community-creation.dto';
 import { Community } from './models/community.model';
-import { Trip } from '../db/entities/trip.entity';
+import { TripEntity } from '../common/entities/trip.entity';
 import { CreateTripDto } from './dtos/create-trip.dto';
 import { TripService } from './services/trip.service';
 
@@ -34,17 +34,26 @@ export class CommunityController {
   }
 
   @Get('trips')
-  findAll(): Promise<Trip[]> {
+  findAll(): Promise<TripEntity[]> {
     return this.tripService.findAll();
   }
 
   @Get('trips/:id')
-  findOne(@Param('id') id: string): Promise<Trip> {
+  findOne(@Param('id') id: string): Promise<TripEntity> {
     return this.tripService.findOne(id);
   }
 
   @Post(':id/trips')
-  create(@Body() createTripDto: CreateTripDto): Promise<Trip> {
+  create(@Body() createTripDto: CreateTripDto): Promise<TripEntity> {
     return this.tripService.create(createTripDto);
+  }
+
+  /**
+   * Get all trips for a specific group
+   * @param id
+   */
+  @Get(':id/trips')
+  findTripsByGroup(@Param('id') id: string): Promise<TripEntity[]> {
+    return this.communityService.findTripsByGroup(id);
   }
 }

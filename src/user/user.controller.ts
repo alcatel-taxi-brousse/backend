@@ -8,32 +8,32 @@ import {
   Body,
   NotImplementedException,
 } from '@nestjs/common';
-import { User } from '../db/entities/user.entity';
+import { UserEntity } from '../common/entities/user.entity';
 
 @Controller('users')
 export class UserController {
   @Get()
-  findAll(): User {
+  findAll(): UserEntity {
     throw new NotImplementedException();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): User {
+  findOne(@Param('id') id: string): UserEntity {
     throw new NotImplementedException();
   }
 
   @Post()
-  create(@Body() createUserDto: any): User {
+  create(@Body() createUserDto: any): UserEntity {
     throw new NotImplementedException();
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: any): User {
+  update(@Param('id') id: string, @Body() updateUserDto: any): UserEntity {
     throw new NotImplementedException();
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): User {
+  remove(@Param('id') id: string): UserEntity {
     throw new NotImplementedException();
   }
 }
