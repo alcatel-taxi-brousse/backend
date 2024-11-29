@@ -7,11 +7,16 @@ import {
   Param,
   Body,
   NotImplementedException,
+  NotFoundException
 } from '@nestjs/common';
 import { Group } from '../db/entities/group.entity';
+import { Trip } from 'src/db/entities/trip.entity';
+import { GroupService } from './group.service';
 
 @Controller('groups')
 export class GroupController {
+  constructor(private readonly groupService : GroupService){}
+
   @Get()
   findAll(): void {
     throw new NotImplementedException();
@@ -35,5 +40,10 @@ export class GroupController {
   @Delete(':id')
   remove(@Param('id') id: string): Group {
     throw new NotImplementedException();
+  }
+
+  @Get(':id/trips')
+  async findTripsByGroup(@Param('id') id: string): Promise<Trip[]> {
+    return this.groupService.findTripsByGroup(id);
   }
 }

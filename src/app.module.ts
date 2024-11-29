@@ -12,17 +12,18 @@ import { UserController } from './user/user.controller';
 import { GroupController } from './group/group.controller';
 import { TripController } from './trip/trip.controller';
 import { DatabaseModule } from './db/database.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
     AuthModule,
     DatabaseModule,
+    GroupModule
   ],
   controllers: [
     CommunityController,
     UserController,
-    GroupController,
     TripController,
   ],
   providers: [
