@@ -37,6 +37,6 @@ export class Group extends Model {
   @BelongsToMany(() => User, () => UserGroup)
   users: User[];
 
-  @HasMany(() => Trip, 'groupId')
+  @HasMany(() => Trip, 'group_id')
   trips: Trip[];
 }
