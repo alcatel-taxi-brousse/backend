@@ -12,6 +12,7 @@ import { UserController } from './user/user.controller';
 import { GroupController } from './group/group.controller';
 import { TripController } from './trip/trip.controller';
 import { DatabaseModule } from './db/database.module';
+import { GroupModule } from './group/group.module';
 import { TripModule } from './trip/trip.module';
 
 @Module({
@@ -19,12 +20,12 @@ import { TripModule } from './trip/trip.module';
     ConfigModule.forRoot({ isGlobal: true, load: [AppConfig] }),
     AuthModule,
     DatabaseModule,
+    GroupModule
     TripModule,
   ],
   controllers: [
     CommunityController,
     UserController,
-    GroupController,
     TripController,
   ],
   providers: [
