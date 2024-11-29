@@ -26,4 +26,20 @@ export class CommunityService {
     this.logger.verbose(`Created community ${created.name}`);
     return created;
   }
+
+  async findTripsByGroup(id: string): Promise<Trip[]> {
+    this.logger.verbose(`Fetching trips for group with id ${id}`);
+    const group = await Group.findByPk(id, {
+      include: {
+        model: Trip,
+        through: { attributes: [] }, 
+      },
+    });
+
+    if (!group) {
+      throw new NotFoundException(`Group with id ${id} not found`);
+    }
+
+    return group.trips;
+  }
 }
