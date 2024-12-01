@@ -31,12 +31,13 @@ export class CommunityService {
     });
     return bubbles.map((bubble) => {
       const entity = entities.find((e) => e.community_id === bubble.id);
-      return { ...bubble, ...entity.dataValues };
+      delete entity?.community_id;
+      return !!entity ? { ...bubble, ...entity.dataValues } : bubble;
     });
   }
 
   async createCommunity(dto: CommunityCreationDto): Promise<Community> {
-    const { name, description, withHistory } = dto;
+    const { name, description, withHistory, destination } = dto;
     const bubble = (await this.rainbow.bubbles.createBubble(
       name,
       description,
@@ -46,10 +47,11 @@ export class CommunityService {
       community_id: bubble.id,
       name: bubble.name,
       description,
-      destination: dto.destination,
+      destination: destination,
       private: dto.private,
       join_id: null,
     });
+    delete entity.community_id;
     this.logger.verbose(`Created community ${bubble.name}`);
     return { ...bubble, ...entity.dataValues };
   }
@@ -66,7 +68,7 @@ export class CommunityService {
     if (!group) {
       throw new NotFoundException(`Group with id ${id} not found`);
     }
-
+    //FIXME
     return group.trips;
   }
 }
