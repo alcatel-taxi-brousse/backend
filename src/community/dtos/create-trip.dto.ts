@@ -25,4 +25,8 @@ export class CreateTripDto {
   @IsNotEmpty()
   @IsNumber()
   creator_user_id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  community_id: string;
 }

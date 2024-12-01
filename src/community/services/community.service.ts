@@ -31,7 +31,7 @@ export class CommunityService {
     });
     return bubbles.map((bubble) => {
       const entity = entities.find((e) => e.community_id === bubble.id);
-      return { ...bubble, ...entity.dataValues };
+      return { ...bubble, ...entity };
     });
   }
 
@@ -66,7 +66,7 @@ export class CommunityService {
     if (!group) {
       throw new NotFoundException(`Group with id ${id} not found`);
     }
-
+    //FIXME
     return group.trips;
   }
 }

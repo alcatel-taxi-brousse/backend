@@ -33,27 +33,32 @@ export class CommunityController {
     return this.communityService.createCommunity(dto);
   }
 
-  @Get('trips')
-  findAll(): Promise<TripEntity[]> {
-    return this.tripService.findAll();
+  /**
+   * Get a specific trip in a community
+   * @param tripId
+   */
+  @Get(':communityId/trips/:tripId')
+  findOne(@Param('tripId') tripId: number): Promise<TripEntity> {
+    return this.tripService.findOne(tripId);
   }
 
-  @Get('trips/:id')
-  findOne(@Param('id') id: string): Promise<TripEntity> {
-    return this.tripService.findOne(id);
-  }
-
-  @Post(':id/trips')
+  /**
+   * Create a new trip in a community
+   * @param createTripDto
+   */
+  @Post(':communityId/trips')
   create(@Body() createTripDto: CreateTripDto): Promise<TripEntity> {
     return this.tripService.create(createTripDto);
   }
 
   /**
    * Get all trips for a specific group
-   * @param id
+   * @param communityId
    */
-  @Get(':id/trips')
-  findTripsByGroup(@Param('id') id: string): Promise<TripEntity[]> {
-    return this.communityService.findTripsByCommunity(id);
+  @Get(':communityId/trips')
+  findTripsByGroup(
+    @Param('communityId') communityId: string,
+  ): Promise<TripEntity[]> {
+    return this.communityService.findTripsByCommunity(communityId);
   }
 }
