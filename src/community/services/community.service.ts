@@ -10,6 +10,7 @@ import { Community } from '../models/community.model';
 import { TripEntity } from '../../common/entities/trip.entity';
 import { CommunityEntity } from '../../common/entities/community.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CommunityService {
@@ -21,23 +22,39 @@ export class CommunityService {
     private readonly logger = new Logger(CommunityService.name),
   ) {}
 
-  getCommunities(): Community[] {
+  async getCommunities(): Promise<Community[]> {
     this.logger.verbose('Getting all community');
-    return this.rainbow.bubbles.getAllBubbles();
+    const bubbles = this.rainbow.bubbles.getAllBubbles();
+    const ids: string[] = bubbles.map((bubble) => bubble.id);
+    const entities = await this.communityModel.findAll({
+      where: { community_id: { [Op.in]: ids } },
+    });
+    return bubbles.map((bubble) => {
+      const entity = entities.find((e) => e.community_id === bubble.id);
+      return { ...bubble, ...entity.dataValues };
+    });
   }
 
   async createCommunity(dto: CommunityCreationDto): Promise<Community> {
     const { name, description, withHistory } = dto;
-    const created = (await this.rainbow.bubbles.createBubble(
+    const bubble = (await this.rainbow.bubbles.createBubble(
       name,
       description,
       withHistory,
     )) as Community;
-    this.logger.verbose(`Created community ${created.name}`);
-    return created;
+    const entity = await this.communityModel.create({
+      community_id: bubble.id,
+      name: bubble.name,
+      description,
+      destination: dto.destination,
+      private: dto.private,
+      join_id: null,
+    });
+    this.logger.verbose(`Created community ${bubble.name}`);
+    return { ...bubble, ...entity.dataValues };
   }
 
-  async findTripsByGroup(id: string): Promise<TripEntity[]> {
+  async findTripsByCommunity(id: string): Promise<TripEntity[]> {
     this.logger.verbose(`Fetching trips for group with id ${id}`);
     const group = await this.communityModel.findByPk(id, {
       include: {

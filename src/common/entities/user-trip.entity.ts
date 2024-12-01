@@ -6,7 +6,7 @@ import { TripEntity } from './trip.entity';
 export class UserTripEntity extends Model {
   @ForeignKey(() => UserEntity)
   @Column
-  user_id: number;
+  user_id: string;
 
   @ForeignKey(() => TripEntity)
   @Column

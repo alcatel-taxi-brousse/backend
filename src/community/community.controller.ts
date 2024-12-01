@@ -20,7 +20,7 @@ export class CommunityController {
    * Get all communities in the instance
    */
   @Get()
-  getCommunities(): Community[] {
+  async getCommunities(): Promise<Community[]> {
     return this.communityService.getCommunities();
   }
 
@@ -54,6 +54,6 @@ export class CommunityController {
    */
   @Get(':id/trips')
   findTripsByGroup(@Param('id') id: string): Promise<TripEntity[]> {
-    return this.communityService.findTripsByGroup(id);
+    return this.communityService.findTripsByCommunity(id);
   }
 }

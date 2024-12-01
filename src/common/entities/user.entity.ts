@@ -3,7 +3,6 @@ import {
   Column,
   Model,
   PrimaryKey,
-  AutoIncrement,
   BelongsToMany,
 } from 'sequelize-typescript';
 import { CommunityEntity } from './community.entity';
@@ -14,9 +13,8 @@ import { UserTripEntity } from './user-trip.entity';
 @Table({ tableName: 'User', timestamps: false })
 export class UserEntity extends Model {
   @PrimaryKey
-  @AutoIncrement
   @Column
-  user_id: number;
+  user_id: string;
 
   @Column
   name: string;

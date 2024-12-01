@@ -37,11 +37,11 @@ export class TripEntity extends Model {
 
   @ForeignKey(() => UserEntity)
   @Column
-  creator_user_id: number;
+  creator_user_id: string;
 
   @ForeignKey(() => CommunityEntity)
   @Column
-  community_id: number;
+  community_id: string;
 
   @BelongsTo(() => CommunityEntity)
   community: CommunityEntity;

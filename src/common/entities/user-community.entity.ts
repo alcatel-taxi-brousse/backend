@@ -6,9 +6,9 @@ import { CommunityEntity } from './community.entity';
 export class UserCommunityEntity extends Model {
   @ForeignKey(() => UserEntity)
   @Column
-  user_id: number;
+  user_id: string;
 
   @ForeignKey(() => CommunityEntity)
   @Column
-  community_id: number;
+  community_id: string;
 }

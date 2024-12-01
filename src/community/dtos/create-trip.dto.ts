@@ -24,5 +24,5 @@ export class CreateTripDto {
 
   @IsNotEmpty()
   @IsNumber()
-  creator_user_id: number;
+  creator_user_id: string;
 }

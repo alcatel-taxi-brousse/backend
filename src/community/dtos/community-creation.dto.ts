@@ -11,4 +11,11 @@ export class CommunityCreationDto {
 
   @IsBoolean()
   withHistory: boolean = false;
+
+  @IsString()
+  @IsNotEmpty()
+  destination: string;
+
+  @IsBoolean()
+  private: boolean = false;
 }

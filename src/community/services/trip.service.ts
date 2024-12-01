@@ -25,7 +25,7 @@ export class TripService {
 
   async findOne(id: string): Promise<TripEntity> {
     return this.tripModel.findByPk(id, {
-      include: ['users', 'group'],
+      include: ['users', 'community'],
     });
   }
 }

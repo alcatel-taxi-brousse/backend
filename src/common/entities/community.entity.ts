@@ -3,7 +3,6 @@ import {
   Column,
   Model,
   PrimaryKey,
-  AutoIncrement,
   BelongsToMany,
   HasMany,
 } from 'sequelize-typescript';
@@ -14,9 +13,8 @@ import { UserCommunityEntity } from './user-community.entity';
 @Table({ tableName: 'Community', timestamps: false })
 export class CommunityEntity extends Model {
   @PrimaryKey
-  @AutoIncrement
   @Column
-  community_id: number;
+  community_id: string;
 
   @Column
   name: string;
@@ -34,8 +32,8 @@ export class CommunityEntity extends Model {
   join_id: number;
 
   @BelongsToMany(() => UserEntity, () => UserCommunityEntity)
-  users: UserEntity[];
+  users?: UserEntity[];
 
   @HasMany(() => TripEntity, 'community_id')
-  trips: TripEntity[];
+  trips?: TripEntity[];
 }
