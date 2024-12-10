@@ -1,4 +1,4 @@
-export type RainbowHttpError = {
+export type RainbowAuthHttpError = {
   errorCode: number;
   errorMsg: string;
   errorDetails: string;

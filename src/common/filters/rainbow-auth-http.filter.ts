@@ -1,11 +1,14 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { AxiosError } from 'axios';
-import { RainbowHttpError } from '../errors/rainbow-http.error';
+import { RainbowAuthHttpError } from '../errors/rainbow-auth-http.error';
 import { Response } from 'express';
 
 @Catch(AxiosError)
-export class RainbowHttpFilter implements ExceptionFilter {
-  catch(exception: AxiosError<RainbowHttpError>, host: ArgumentsHost): void {
+export class RainbowAuthHttpFilter implements ExceptionFilter {
+  catch(
+    exception: AxiosError<RainbowAuthHttpError>,
+    host: ArgumentsHost,
+  ): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.response?.status || 500;
