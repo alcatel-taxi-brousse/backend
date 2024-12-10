@@ -70,4 +70,15 @@ export class CommunityService {
     }
     return group.trips;
   }
+
+  async joinCommunity(communityId: string, userId: string): Promise<void> {
+    const bubble = await this.rainbow.bubbles.getBubbleById(communityId);
+    const contact = await this.rainbow.contacts.getContactById(userId);
+    await this.rainbow.bubbles.inviteContactToBubble(
+      contact,
+      bubble,
+      false, // Not as moderator
+      false, // Add directly to the bubble without invitation
+    );
+  }
 }
