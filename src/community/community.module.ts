@@ -8,6 +8,8 @@ import { CommunityEntity } from '../common/entities/community.entity';
 import { UserTripEntity } from '../common/entities/user-trip.entity';
 import { UserEntity } from '../common/entities/user.entity';
 import { UserCommunityEntity } from '../common/entities/user-community.entity';
+import { APP_FILTER } from '@nestjs/core';
+import { RainbowHttpFilter } from '../common/filters/rainbow-http.filter';
 
 @Module({
   imports: [
@@ -20,6 +22,10 @@ import { UserCommunityEntity } from '../common/entities/user-community.entity';
     ]),
   ],
   controllers: [CommunityController],
-  providers: [CommunityService, TripService],
+  providers: [
+    CommunityService,
+    TripService,
+    { provide: APP_FILTER, useClass: RainbowHttpFilter },
+  ],
 })
 export class CommunityModule {}

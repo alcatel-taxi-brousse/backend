@@ -28,9 +28,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
 
-    const parsedToken = JSON.parse(
-      Buffer.from(token.split('.')[1], 'base64').toString(),
-    );
+    const parsedToken = this.parseToken(token);
     request['user'] = parsedToken?.user;
 
     const { status } = await this.authService.checkTokenValidity(token);
@@ -43,5 +41,14 @@ export class AuthGuard implements CanActivate {
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers['authorization']?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
+  }
+
+  private parseToken(token: string): {
+    user: {
+      id: string;
+      loginEmail: string;
+    };
+  } {
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
   }
 }
