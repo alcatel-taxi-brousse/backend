@@ -20,17 +20,23 @@ export class TripService {
     private readonly logger = new Logger(TripService.name),
   ) {}
 
-  async create(createTripDto: CreateTripDto): Promise<TripEntity> {
+  async create(
+    creatorId: string,
+    communityId: string,
+    createTripDto: CreateTripDto,
+  ): Promise<TripEntity> {
     this.logger.verbose(
       `Creating new trip from ${createTripDto.start_location}`,
     );
-    const community = await this.communityModel.findByPk(
-      createTripDto.community_id,
-    );
+    const community = await this.communityModel.findByPk(communityId);
     if (!community) {
       throw new NotFoundException('Community not found');
     }
-    return this.tripModel.create({ ...createTripDto });
+    return this.tripModel.create({
+      ...createTripDto,
+      creator_user_id: creatorId,
+      community_id: communityId,
+    });
   }
 
   async findAll(): Promise<TripEntity[]> {

@@ -6,6 +6,8 @@ import { Community } from './models/community.model';
 import { TripEntity } from '../common/entities/trip.entity';
 import { CreateTripDto } from './dtos/create-trip.dto';
 import { TripService } from './services/trip.service';
+import { UserId } from '../common/decorators/user.decorator';
+import { UserEntity } from '../common/entities/user.entity';
 
 @ApiTags('communities')
 @ApiBearerAuth()
@@ -45,10 +47,16 @@ export class CommunityController {
   /**
    * Create a new trip in a community
    * @param createTripDto
+   * @param communityId
+   * @param userId
    */
   @Post(':communityId/trips')
-  create(@Body() createTripDto: CreateTripDto): Promise<TripEntity> {
-    return this.tripService.create(createTripDto);
+  create(
+    @Body() createTripDto: CreateTripDto,
+    @Param('communityId') communityId: string,
+    @UserId() userId: string,
+  ): Promise<TripEntity> {
+    return this.tripService.create(userId, communityId, createTripDto);
   }
 
   /**

@@ -18,6 +18,8 @@ export class CommunityService {
     private readonly rainbow: RainbowSDK,
     @InjectModel(CommunityEntity)
     private readonly communityModel: typeof CommunityEntity,
+    @InjectModel(TripEntity)
+    private readonly tripModel: typeof TripEntity,
     @Optional()
     private readonly logger = new Logger(CommunityService.name),
   ) {}
@@ -60,15 +62,12 @@ export class CommunityService {
     this.logger.verbose(`Fetching trips for group with id ${id}`);
     const group = await this.communityModel.findByPk(id, {
       include: {
-        model: TripEntity,
-        through: { attributes: [] },
+        model: this.tripModel,
       },
     });
-
     if (!group) {
       throw new NotFoundException(`Group with id ${id} not found`);
     }
-    //FIXME
     return group.trips;
   }
 }
