@@ -28,6 +28,11 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
 
+    const parsedToken = JSON.parse(
+      Buffer.from(token.split('.')[1], 'base64').toString(),
+    );
+    request['user'] = parsedToken?.user;
+
     const { status } = await this.authService.checkTokenValidity(token);
     if (status !== 'OK') {
       throw new UnauthorizedException('Invalid token');

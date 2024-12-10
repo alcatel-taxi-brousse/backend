@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { CommunityController } from './community/community.controller';
-import { CommunityService } from './community/community.service';
+import { CommunityService } from './community/services/community.service';
 
 describe('AppController', () => {
   beforeEach(async () => {

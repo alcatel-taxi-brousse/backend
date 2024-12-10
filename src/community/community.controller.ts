@@ -1,21 +1,28 @@
-import { Body, Controller, Get, Post, Param } from '@nestjs/common';
-import { CommunityService } from './community.service';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { CommunityService } from './services/community.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CommunityCreationDto } from './community-creation.dto';
+import { CommunityCreationDto } from './dtos/community-creation.dto';
 import { Community } from './models/community.model';
-import { Trip } from 'src/db/entities/trip.entity';
+import { TripEntity } from '../common/entities/trip.entity';
+import { CreateTripDto } from './dtos/create-trip.dto';
+import { TripService } from './services/trip.service';
+import { UserId } from '../common/decorators/user.decorator';
+import { UserEntity } from '../common/entities/user.entity';
 
 @ApiTags('communities')
 @ApiBearerAuth()
 @Controller('communities')
 export class CommunityController {
-  constructor(private readonly communityService: CommunityService) {}
+  constructor(
+    private readonly communityService: CommunityService,
+    private readonly tripService: TripService,
+  ) {}
 
   /**
    * Get all communities in the instance
    */
   @Get()
-  getCommunities(): Community[] {
+  async getCommunities(): Promise<Community[]> {
     return this.communityService.getCommunities();
   }
 
@@ -28,12 +35,38 @@ export class CommunityController {
     return this.communityService.createCommunity(dto);
   }
 
-    /**
-   * Get all trips for a specific group
-   * @param id
+  /**
+   * Get a specific trip in a community
+   * @param tripId
    */
-    @Get(':id/trips')
-    findTripsByGroup(@Param('id') id: string): Promise<Trip[]> {
-      return this.communityService.findTripsByGroup(id);
-    }
+  @Get(':communityId/trips/:tripId')
+  findOne(@Param('tripId') tripId: number): Promise<TripEntity> {
+    return this.tripService.findOne(tripId);
+  }
+
+  /**
+   * Create a new trip in a community
+   * @param createTripDto
+   * @param communityId
+   * @param userId
+   */
+  @Post(':communityId/trips')
+  create(
+    @Body() createTripDto: CreateTripDto,
+    @Param('communityId') communityId: string,
+    @UserId() userId: string,
+  ): Promise<TripEntity> {
+    return this.tripService.create(userId, communityId, createTripDto);
+  }
+
+  /**
+   * Get all trips for a specific group
+   * @param communityId
+   */
+  @Get(':communityId/trips')
+  findTripsByGroup(
+    @Param('communityId') communityId: string,
+  ): Promise<TripEntity[]> {
+    return this.communityService.findTripsByCommunity(communityId);
+  }
 }

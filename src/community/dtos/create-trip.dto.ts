@@ -21,8 +21,4 @@ export class CreateTripDto {
 
   @IsString()
   description: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  creator_user_id: number;
 }
