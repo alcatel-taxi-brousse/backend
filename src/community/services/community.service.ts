@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   Logger,
   NotFoundException,
@@ -11,6 +12,7 @@ import { TripEntity } from '../../common/entities/trip.entity';
 import { CommunityEntity } from '../../common/entities/community.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { code } from 'rainbow-node-sdk/lib/common/ErrorManager';
 
 @Injectable()
 export class CommunityService {
@@ -74,11 +76,20 @@ export class CommunityService {
   async joinCommunity(communityId: string, userId: string): Promise<void> {
     const bubble = await this.rainbow.bubbles.getBubbleById(communityId);
     const contact = await this.rainbow.contacts.getContactById(userId);
-    await this.rainbow.bubbles.inviteContactToBubble(
-      contact,
-      bubble,
-      false, // Not as moderator
-      false, // Add directly to the bubble without invitation
-    );
+    try {
+      await this.rainbow.bubbles.inviteContactToBubble(
+        contact,
+        bubble,
+        false, // Not as moderator
+        false, // Add directly to the bubble without invitation
+      );
+    } catch (e) {
+      if (e.code === code.ERRORBADREQUEST) {
+        throw new BadRequestException(
+          'Failed to join the group. User may already be a member',
+        );
+      }
+      throw e;
+    }
   }
 }
