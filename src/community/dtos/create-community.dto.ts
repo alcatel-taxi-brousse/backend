@@ -1,6 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CommunityCreationDto {
+export class CreateCommunityDto {
   @IsNotEmpty()
   @IsString()
   name: string;

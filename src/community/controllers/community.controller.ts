@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CommunityService } from '../services/community.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CommunityCreationDto } from '../dtos/community-creation.dto';
+import { CreateCommunityDto } from '../dtos/create-community.dto';
 import { Community } from '../models/community.model';
 import { UserId } from '../../common/decorators/user.decorator';
 
@@ -24,7 +24,7 @@ export class CommunityController {
    * @param dto
    */
   @Post()
-  createCommunity(@Body() dto: CommunityCreationDto): Promise<Community> {
+  createCommunity(@Body() dto: CreateCommunityDto): Promise<Community> {
     return this.communityService.createCommunity(dto);
   }
 

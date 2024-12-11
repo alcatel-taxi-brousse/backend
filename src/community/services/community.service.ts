@@ -6,7 +6,7 @@ import {
   Optional,
 } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
-import { CommunityCreationDto } from '../dtos/community-creation.dto';
+import { CreateCommunityDto } from '../dtos/create-community.dto';
 import { Community } from '../models/community.model';
 import { TripEntity } from '../../common/entities/trip.entity';
 import { CommunityEntity } from '../../common/entities/community.entity';
@@ -40,7 +40,7 @@ export class CommunityService {
     });
   }
 
-  async createCommunity(dto: CommunityCreationDto): Promise<Community> {
+  async createCommunity(dto: CreateCommunityDto): Promise<Community> {
     const { name, description, withHistory, destination } = dto;
     const bubble = (await this.rainbow.bubbles.createBubble(
       name,
