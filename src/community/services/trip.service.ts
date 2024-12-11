@@ -77,7 +77,7 @@ export class TripService {
       throw new NotFoundException('User not found');
     }
     // TODO: remove user entity and just rely on the id
-    await this.userModel.findOrCreate({
+    const [user, _] = await this.userModel.findOrCreate({
       where: { user_id: rainbowUser.id },
       defaults: {
         user_id: rainbowUser.id,
@@ -89,7 +89,8 @@ export class TripService {
       (total, trip) => total + trip.nb_people,
       0,
     );
-    if (takenSeats + nbPeople > trip.nb_seats_car) {
+    const newTakenSeats = takenSeats + nbPeople;
+    if (newTakenSeats > trip.nb_seats_car) {
       throw new BadRequestException(
         `Not enough seats. Max seats: ${trip.nb_seats_car}, taken seats: ${takenSeats}`,
       );
@@ -103,14 +104,11 @@ export class TripService {
       throw new ConflictException('User already joined this trip');
     }
 
-    const userTrip = await this.userTripModel.create(
-      {
-        user_id: userId,
-        trip_id: tripId,
-        nb_people: nbPeople,
-      },
-      { include: [this.tripModel] },
-    );
-    return userTrip.trip;
+    await trip.$add('users', user, {
+      through: { nb_people: newTakenSeats },
+    });
+    return this.tripModel.findByPk(tripId, {
+      include: this.userModel,
+    });
   }
 }
