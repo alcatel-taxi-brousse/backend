@@ -1,4 +1,6 @@
 import {
+  BadRequestException,
+  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
@@ -66,6 +68,9 @@ export class TripService {
     if (!trip) {
       throw new NotFoundException('Trip not found');
     }
+    const userTrips = await this.userTripModel.findAll({
+      where: { trip_id: tripId },
+    });
 
     const rainbowUser = await this.rainbow.contacts.getContactById(userId);
     if (!rainbowUser) {
@@ -79,6 +84,25 @@ export class TripService {
         name: rainbowUser.name?.value,
       },
     });
+
+    const takenSeats = userTrips.reduce(
+      (total, trip) => total + trip.nb_people,
+      0,
+    );
+    if (takenSeats + nbPeople > trip.nb_seats_car) {
+      throw new BadRequestException(
+        `Not enough seats. Max seats: ${trip.nb_seats_car}, taken seats: ${takenSeats}`,
+      );
+    }
+
+    if (
+      await this.userTripModel.findOne({
+        where: { user_id: userId, trip_id: tripId },
+      })
+    ) {
+      throw new ConflictException('User already joined this trip');
+    }
+
     const userTrip = await this.userTripModel.create(
       {
         user_id: userId,
