@@ -2,6 +2,7 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
+  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -10,9 +11,19 @@ import { code } from 'rainbow-node-sdk/lib/common/ErrorManager';
 
 @Catch()
 export class RainbowHttpFilter implements ExceptionFilter {
-  catch(exception: RainbowHttpError, host: ArgumentsHost): void {
+  catch(
+    exception: RainbowHttpError | HttpException,
+    host: ArgumentsHost,
+  ): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    if (exception instanceof HttpException) {
+      const status = exception.getStatus();
+      response.status(status).json(exception.getResponse());
+      return;
+    }
+
+    exception = exception as RainbowHttpError;
     const rainbowErrorCode = exception.code;
     const error = exception.msg;
     const status = this.getHttpStatusCode(rainbowErrorCode);
