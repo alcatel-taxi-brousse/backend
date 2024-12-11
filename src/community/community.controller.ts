@@ -7,6 +7,7 @@ import { TripEntity } from '../common/entities/trip.entity';
 import { CreateTripDto } from './dtos/create-trip.dto';
 import { TripService } from './services/trip.service';
 import { UserId } from '../common/decorators/user.decorator';
+import { JoinTripDto } from './dtos/join-trip.dto';
 
 @ApiTags('communities')
 @ApiBearerAuth()
@@ -49,6 +50,15 @@ export class CommunityController {
   @Get(':communityId/trips/:tripId')
   findOne(@Param('tripId') tripId: number): Promise<TripEntity> {
     return this.tripService.findOne(tripId);
+  }
+
+  @Post(':communityId/trips/:tripId/join')
+  joinTrip(
+    @Param('tripId') tripId: string,
+    @UserId() userId: string,
+    @Body() dto: JoinTripDto,
+  ): Promise<TripEntity> {
+    return this.tripService.joinTrip(tripId, userId, dto.nbPeople);
   }
 
   /**

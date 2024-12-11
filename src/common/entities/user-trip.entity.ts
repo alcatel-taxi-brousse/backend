@@ -1,4 +1,4 @@
-import { Table, Column, Model, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, Model, ForeignKey, HasOne } from 'sequelize-typescript';
 import { UserEntity } from './user.entity';
 import { TripEntity } from './trip.entity';
 
@@ -14,4 +14,10 @@ export class UserTripEntity extends Model {
 
   @Column
   nb_people: number;
+
+  @HasOne(() => UserEntity, 'user_id')
+  user: UserEntity;
+
+  @HasOne(() => TripEntity, 'trip_id')
+  trip: TripEntity;
 }
