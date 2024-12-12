@@ -1,21 +1,56 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { AxiosError } from 'axios';
-import { RainbowHttpError } from '../errors/rainbow-http.error';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Response } from 'express';
+import { RainbowHttpError } from '../errors/rainbow-http.error';
+import { code } from 'rainbow-node-sdk/lib/common/ErrorManager';
 
-@Catch(AxiosError)
+@Catch()
 export class RainbowHttpFilter implements ExceptionFilter {
-  catch(exception: AxiosError<RainbowHttpError>, host: ArgumentsHost): void {
+  catch(
+    exception: RainbowHttpError | HttpException,
+    host: ArgumentsHost,
+  ): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const status = exception.response?.status || 500;
-    const errorDetailsCode = exception.response?.data.errorDetailsCode;
-    const error = exception.response?.data.errorDetails || exception.message;
+    if (exception instanceof HttpException) {
+      const status = exception.getStatus();
+      response.status(status).json(exception.getResponse());
+      return;
+    }
+
+    exception = exception as RainbowHttpError;
+    const rainbowErrorCode = exception.code;
+    const error = exception.msg;
+    const status = this.getHttpStatusCode(rainbowErrorCode);
 
     response.status(status).json({
       statusCode: status,
       error: error,
-      errorDetailsCode,
+      rainbowErrorCode,
     });
+  }
+
+  private getHttpStatusCode(rainbowErrorCode: number): HttpStatus {
+    switch (rainbowErrorCode) {
+      case code.OK:
+        return HttpStatus.OK;
+      case code.ERRORUNAUTHORIZED:
+        return HttpStatus.UNAUTHORIZED;
+      case code.ERRORBADREQUEST:
+        return HttpStatus.BAD_REQUEST;
+      case code.ERRORFORBIDDEN:
+        return HttpStatus.FORBIDDEN;
+      case code.ERRORNOTFOUND:
+        return HttpStatus.NOT_FOUND;
+      case code.ERRORUNSUPPORTED:
+        return HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+      default:
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
   }
 }

@@ -1,7 +1,5 @@
 export type RainbowHttpError = {
-  errorCode: number;
-  errorMsg: string;
-  errorDetails: string;
-  errorDetailsCode: number;
-  errorDetailsData: unknown;
+  code: number;
+  label: string;
+  msg: string;
 };

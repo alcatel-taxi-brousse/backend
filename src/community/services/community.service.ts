@@ -1,16 +1,18 @@
 import {
+  BadRequestException,
   Injectable,
   Logger,
   NotFoundException,
   Optional,
 } from '@nestjs/common';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
-import { CommunityCreationDto } from '../dtos/community-creation.dto';
+import { CreateCommunityDto } from '../dtos/create-community.dto';
 import { Community } from '../models/community.model';
 import { TripEntity } from '../../common/entities/trip.entity';
 import { CommunityEntity } from '../../common/entities/community.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { code } from 'rainbow-node-sdk/lib/common/ErrorManager';
 
 @Injectable()
 export class CommunityService {
@@ -38,7 +40,7 @@ export class CommunityService {
     });
   }
 
-  async createCommunity(dto: CommunityCreationDto): Promise<Community> {
+  async createCommunity(dto: CreateCommunityDto): Promise<Community> {
     const { name, description, withHistory, destination } = dto;
     const bubble = (await this.rainbow.bubbles.createBubble(
       name,
@@ -69,5 +71,25 @@ export class CommunityService {
       throw new NotFoundException(`Group with id ${id} not found`);
     }
     return group.trips;
+  }
+
+  async joinCommunity(communityId: string, userId: string): Promise<void> {
+    const bubble = await this.rainbow.bubbles.getBubbleById(communityId);
+    const contact = await this.rainbow.contacts.getContactById(userId);
+    try {
+      await this.rainbow.bubbles.inviteContactToBubble(
+        contact,
+        bubble,
+        false, // Not as moderator
+        false, // Add directly to the bubble without invitation
+      );
+    } catch (e) {
+      if (e.code === code.ERRORBADREQUEST) {
+        throw new BadRequestException(
+          'Failed to join the group. User may already be a member',
+        );
+      }
+      throw e;
+    }
   }
 }

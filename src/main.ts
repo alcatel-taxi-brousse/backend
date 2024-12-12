@@ -5,6 +5,8 @@ import { ConfigService, ConfigType } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppConfig } from './app.config';
 import { INestApplication, LogLevel, ValidationPipe } from '@nestjs/common';
+import { SequelizeFilter } from './common/filters/sequelize.filter';
+import { RainbowHttpFilter } from './common/filters/rainbow-http.filter';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +20,7 @@ async function bootstrap(): Promise<void> {
   logger.setLogLevels(logLevels);
   app.useGlobalPipes(new ValidationPipe());
   app.useLogger(logger);
+  app.useGlobalFilters(new RainbowHttpFilter(), new SequelizeFilter());
   const enableSwagger = configService.get('enableSwagger', { infer: true });
   if (enableSwagger) {
     enableSwaggerEndpoint(app);
