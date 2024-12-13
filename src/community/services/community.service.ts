@@ -102,12 +102,9 @@ export class CommunityService {
       if (community.private) {
         // Only search by id or join_id if the community is private
         return (
-          searchFormatted.length > 0 &&
-          (community.community_id.toLowerCase().includes(searchFormatted) ||
-            community.join_id
-              .toString()
-              .toLowerCase()
-              .includes(searchFormatted))
+          community.community_id.toLowerCase() === searchFormatted ||
+          (community.join_id !== null &&
+            community.join_id.toString().toLowerCase() === searchFormatted)
         );
       }
       return (
