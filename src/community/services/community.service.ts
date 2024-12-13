@@ -108,6 +108,7 @@ export class CommunityService {
         );
       }
       return (
+        community.community_id.toLowerCase().includes(searchFormatted) ||
         community.name.toLowerCase().includes(searchFormatted) ||
         community.description.toLowerCase().includes(searchFormatted) ||
         community.destination.toLowerCase().includes(searchFormatted)

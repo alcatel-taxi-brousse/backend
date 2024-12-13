@@ -37,8 +37,8 @@ export class CommunityController {
   }
 
   /**
-   * Search communities by name/description/id...
-   * Search only by id if the community is private
+   * Search communities by name/description/id
+   * (search only by id if the community is private)
    * @param search
    */
   @Get('search')
