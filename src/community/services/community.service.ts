@@ -92,4 +92,35 @@ export class CommunityService {
       throw e;
     }
   }
+
+  async searchCommunities(search: string): Promise<Community[]> {
+    const communities = await this.communityModel.findAll();
+
+    // Search filter
+    const searchFormatted = (search ?? '').trim().toLowerCase();
+    const filteredCommunities = communities.filter((community) => {
+      if (community.private) {
+        // Only search by id or join_id if the community is private
+        return (
+          searchFormatted.length > 0 &&
+          (community.community_id.toLowerCase().includes(searchFormatted) ||
+            community.join_id
+              .toString()
+              .toLowerCase()
+              .includes(searchFormatted))
+        );
+      }
+      return (
+        community.name.toLowerCase().includes(searchFormatted) ||
+        community.description.toLowerCase().includes(searchFormatted) ||
+        community.destination.toLowerCase().includes(searchFormatted)
+      );
+    });
+
+    return filteredCommunities.map((community) => {
+      //   const bubble = this.rainbow.bubbles.getBubbleById(community.community_id);
+      //   return { ...bubble, ...community.dataValues };
+      return { ...community.dataValues };
+    });
+  }
 }

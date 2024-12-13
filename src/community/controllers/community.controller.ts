@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CommunityService } from '../services/community.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { CreateCommunityDto } from '../dtos/create-community.dto';
 import { Community } from '../models/community.model';
 import { UserId } from '../../common/decorators/user.decorator';
@@ -34,5 +34,21 @@ export class CommunityController {
     @UserId() userId: string,
   ): Promise<void> {
     return this.communityService.joinCommunity(communityId, userId);
+  }
+
+  /**
+   * Search communities by name/description/id...
+   * Search only by id if the community is private
+   * @param search
+   */
+  @Get('search')
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search query for communities',
+  })
+  searchCommunities(@Query('search') search: string): Promise<Community[]> {
+    return this.communityService.searchCommunities(search);
   }
 }
