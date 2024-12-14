@@ -116,8 +116,6 @@ export class CommunityService {
     });
 
     return filteredCommunities.map((community) => {
-      //   const bubble = this.rainbow.bubbles.getBubbleById(community.community_id);
-      //   return { ...bubble, ...community.dataValues };
       return { ...community.dataValues };
     });
   }
