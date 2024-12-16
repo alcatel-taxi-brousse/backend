@@ -40,6 +40,26 @@ export class CommunityService {
     });
   }
 
+  async getCommunitiesApp(): Promise<Community[]> {
+    this.logger.verbose('Getting all community in the app');
+    const bubbles = this.rainbow.bubbles.getAllBubbles();
+    const ids: string[] = bubbles.map((bubble) => bubble.id);
+    const entities = await this.communityModel.findAll({
+      where: { community_id: { [Op.in]: ids } },
+    });
+
+    // Filter bubbles, if exists in the app
+    const filtered_bubbles = bubbles.filter((bubble) =>
+      entities.some((entity) => entity.community_id === bubble.id),
+    );
+    // Add app data
+    return filtered_bubbles.map((bubble) => {
+      const entity = entities.find((e) => e.community_id === bubble.id);
+      delete entity?.community_id;
+      return !!entity ? { ...bubble, ...entity.dataValues } : bubble;
+    });
+  }
+
   async createCommunity(dto: CreateCommunityDto): Promise<Community> {
     const { name, description, withHistory, destination } = dto;
     const bubble = (await this.rainbow.bubbles.createBubble(
