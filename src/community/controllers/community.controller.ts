@@ -24,6 +24,14 @@ export class CommunityController {
   }
 
   /**
+   * Get all communities in the instance added in the app
+   */
+  @Get('app')
+  async getCommunitiesApp(): Promise<Community[]> {
+    return this.communityService.getCommunitiesApp();
+  }
+
+  /**
    * Create a new community
    * @param dto
    */
