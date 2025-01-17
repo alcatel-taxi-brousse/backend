@@ -8,6 +8,7 @@ import { CommunityEntity } from '../common/entities/community.entity';
 import { UserTripEntity } from '../common/entities/user-trip.entity';
 import { UserEntity } from '../common/entities/user.entity';
 import { UserCommunityEntity } from '../common/entities/user-community.entity';
+import { CommunityTripController } from './controllers/community-trip.controller';
 import { TripController } from './controllers/trip.controller';
 
 @Module({
@@ -20,7 +21,7 @@ import { TripController } from './controllers/trip.controller';
       UserCommunityEntity,
     ]),
   ],
-  controllers: [CommunityController, TripController],
+  controllers: [CommunityController, CommunityTripController, TripController],
   providers: [CommunityService, TripService],
 })
 export class CommunityModule {}

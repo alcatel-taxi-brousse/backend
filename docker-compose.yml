@@ -11,5 +11,19 @@ services:
       - db:/var/lib/postgresql/data
     restart: unless-stopped
 
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+# LOCAL DEV ONLY
+    # environment:
+    #   - ENABLE_SWAGGER=
+    #   - RAINBOW_LOGIN=
+    #   - RAINBOW_PASSWORD=
+    #   - RAINBOW_APP_ID=
+    #   - RAINBOW_APP_SECRET=
+    #   - DB_HOST=db
+
 volumes:
   db:

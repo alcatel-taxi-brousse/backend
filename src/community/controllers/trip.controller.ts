@@ -1,77 +1,32 @@
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
-import { TripEntity } from '../../common/entities/trip.entity';
+import { Controller, Get, Query } from '@nestjs/common';
 import { UserId } from '../../common/decorators/user.decorator';
-import { JoinTripDto } from '../dtos/join-trip.dto';
-import { CreateTripDto } from '../dtos/create-trip.dto';
-import { CommunityService } from '../services/community.service';
+import { TripEntity } from '../../common/entities/trip.entity';
 import { TripService } from '../services/trip.service';
+import { GetTripsDto } from '../dtos/get-trips.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('trips')
 @ApiBearerAuth()
-@Controller('communities/:communityId/trips')
+@Controller('trips')
 export class TripController {
-  constructor(
-    private readonly communityService: CommunityService,
-    private readonly tripService: TripService,
-  ) {}
+  constructor(private readonly tripService: TripService) {}
 
   /**
-   * Get all trips for a specific group
-   * @param communityId
-   */
-  @Get()
-  getMany(@Param('communityId') communityId: string): Promise<TripEntity[]> {
-    return this.communityService.findTripsByCommunity(communityId);
-  }
-
-  /**
-   * Get a specific trip in a community
-   * @param tripId
-   */
-  @Get(':tripId')
-  getOne(@Param('tripId') tripId: number): Promise<TripEntity> {
-    return this.tripService.findOne(tripId);
-  }
-
-  /**
-   * Create a new trip in a community
-   * @param createTripDto
-   * @param communityId
+   * Get upcoming trips for the logged-in user
    * @param userId
+   * @param query
    */
-  @Post()
-  create(
-    @Body() createTripDto: CreateTripDto,
-    @Param('communityId') communityId: string,
+  @Get('me')
+  async getUpcomingTrips(
     @UserId() userId: string,
-  ): Promise<TripEntity> {
-    return this.tripService.create(userId, communityId, createTripDto);
-  }
-
-  @Post(':tripId/join')
-  joinTrip(
-    @Param('tripId', ParseIntPipe) tripId: number,
-    @UserId() userId: string,
-    @Body() dto: JoinTripDto,
-  ): Promise<TripEntity> {
-    const { nbPeople } = dto;
-    return this.tripService.joinTrip(tripId, userId, nbPeople);
-  }
-
-  @Delete(':tripId/leave')
-  leaveTrip(
-    @Param('tripId', ParseIntPipe) tripId: number,
-    @UserId() userId: string,
-  ): Promise<TripEntity> {
-    return this.tripService.leaveTrip(tripId, userId);
+    @Query() { from, to }: GetTripsDto,
+  ): Promise<TripEntity[]> {
+    const fromDate = from ? new Date(from) : new Date();
+    const toDate = to ? new Date(to) : undefined;
+    return await this.tripService.findUpcomingTripsByUser(
+      userId,
+      fromDate,
+      toDate,
+    );
   }
 }
