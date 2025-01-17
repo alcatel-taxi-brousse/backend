@@ -118,7 +118,7 @@ export class TripService {
     fromDate: Date,
     toDate?: Date,
   ): Promise<TripEntity[]> {
-    const whereClause: any = {
+    const whereClause = {
       date: {
         [Op.gte]: fromDate,
       },
