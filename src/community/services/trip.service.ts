@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
   Logger,
   NotFoundException,
@@ -50,10 +49,6 @@ export class TripService {
     });
   }
 
-  async findAll(): Promise<TripEntity[]> {
-    return this.tripModel.findAll();
-  }
-
   async findOne(id: number): Promise<TripEntity> {
     return this.tripModel.findByPk(id, {
       include: ['users', 'community'],
@@ -61,7 +56,7 @@ export class TripService {
   }
 
   async joinTrip(
-    tripId: string,
+    tripId: number,
     userId: string,
     nbPeople: number,
   ): Promise<TripEntity> {
@@ -90,24 +85,47 @@ export class TripService {
       (total, trip) => total + trip.nb_people,
       0,
     );
-    const newTakenSeats = takenSeats + nbPeople;
+    let newTakenSeats = takenSeats;
+
+    const existingUserTrip = userTrips.find((ut) => ut.user_id === userId);
+    newTakenSeats += nbPeople;
+    if (existingUserTrip) {
+      newTakenSeats -= existingUserTrip.nb_people;
+      this.logger.verbose(
+        `User already joined this trip. Updating number of taken seats to ${newTakenSeats}`,
+      );
+    }
+
     if (newTakenSeats > trip.nb_seats_car) {
       throw new BadRequestException(
         `Not enough seats. Max seats: ${trip.nb_seats_car}, taken seats: ${takenSeats}`,
       );
     }
 
-    if (
-      await this.userTripModel.findOne({
-        where: { user_id: userId, trip_id: tripId },
-      })
-    ) {
-      throw new ConflictException('User already joined this trip');
-    }
-
     await trip.$add('users', user, {
       through: { nb_people: newTakenSeats },
     });
+    return this.tripModel.findByPk(tripId, {
+      include: this.userModel,
+    });
+  }
+
+  async leaveTrip(tripId: number, userId: string): Promise<TripEntity> {
+    const trip = await this.tripModel.findByPk(tripId);
+    if (!trip) {
+      throw new NotFoundException('Trip not found');
+    }
+    const rainbowUser = await this.rainbow.contacts.getContactById(userId);
+    if (!rainbowUser) {
+      throw new NotFoundException('User not found');
+    }
+    const userTrip = await this.userTripModel.findOne({
+      where: { user_id: userId, trip_id: tripId },
+    });
+    if (!userTrip) {
+      throw new BadRequestException('User did not join this trip');
+    }
+    await userTrip.destroy();
     return this.tripModel.findByPk(tripId, {
       include: this.userModel,
     });

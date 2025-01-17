@@ -11,7 +11,6 @@ import {
 import { UserEntity } from './user.entity';
 import { CommunityEntity } from './community.entity';
 import { UserTripEntity } from './user-trip.entity';
-import { Expose } from 'class-transformer';
 
 @Table({ tableName: 'Trip', timestamps: false })
 export class TripEntity extends Model {
@@ -48,9 +47,4 @@ export class TripEntity extends Model {
 
   @BelongsToMany(() => UserEntity, () => UserTripEntity)
   users: UserEntity[];
-
-  @Expose({ toPlainOnly: true })
-  get nb_people(): number {
-    return this.users ? this.users.length : 0;
-  }
 }
