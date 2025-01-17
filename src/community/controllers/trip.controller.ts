@@ -20,7 +20,7 @@ import { GetTripsDto } from '../dtos/get-trips.dto';
 @ApiTags('trips')
 @ApiBearerAuth()
 @UseFilters(SequelizeFilter)
-@Controller()
+@Controller('communities/:communityId/trips')
 export class TripController {
   constructor(
     private readonly communityService: CommunityService,
@@ -31,7 +31,7 @@ export class TripController {
    * Get all trips for a specific group
    * @param communityId
    */
-  @Get('communities/:communityId/trips')
+  @Get()
   getMany(@Param('communityId') communityId: string): Promise<TripEntity[]> {
     return this.communityService.findTripsByCommunity(communityId);
   }
@@ -40,7 +40,7 @@ export class TripController {
    * Get a specific trip in a community
    * @param tripId
    */
-  @Get('communities/:communityId/trips/:tripId')
+  @Get(':tripId')
   getOne(@Param('tripId') tripId: number): Promise<TripEntity> {
     return this.tripService.findOne(tripId);
   }
@@ -51,7 +51,7 @@ export class TripController {
    * @param communityId
    * @param userId
    */
-  @Post('communities/:communityId/trips')
+  @Post()
   create(
     @Body() createTripDto: CreateTripDto,
     @Param('communityId') communityId: string,
@@ -60,7 +60,7 @@ export class TripController {
     return this.tripService.create(userId, communityId, createTripDto);
   }
 
-  @Post('communities/:communityId/trips/:tripId/join')
+  @Post(':tripId/join')
   joinTrip(
     @Param('tripId') tripId: string,
     @UserId() userId: string,
