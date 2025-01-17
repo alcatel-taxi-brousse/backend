@@ -13,6 +13,7 @@ import { CommunityEntity } from '../../common/entities/community.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { code } from 'rainbow-node-sdk/lib/common/ErrorManager';
+import { UserEntity } from '../../common/entities/user.entity';
 
 @Injectable()
 export class CommunityService {
@@ -22,6 +23,8 @@ export class CommunityService {
     private readonly communityModel: typeof CommunityEntity,
     @InjectModel(TripEntity)
     private readonly tripModel: typeof TripEntity,
+    @InjectModel(UserEntity)
+    private readonly userModel: typeof UserEntity,
     @Optional()
     private readonly logger = new Logger(CommunityService.name),
   ) {}
@@ -85,6 +88,7 @@ export class CommunityService {
     const group = await this.communityModel.findByPk(id, {
       include: {
         model: this.tripModel,
+        include: [{ model: this.userModel }],
       },
     });
     if (!group) {

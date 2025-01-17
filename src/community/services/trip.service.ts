@@ -49,10 +49,6 @@ export class TripService {
     });
   }
 
-  async findAll(): Promise<TripEntity[]> {
-    return this.tripModel.findAll();
-  }
-
   async findOne(id: number): Promise<TripEntity> {
     return this.tripModel.findByPk(id, {
       include: ['users', 'community'],
