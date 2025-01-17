@@ -51,7 +51,7 @@ export class TripController {
 
   @Post(':tripId/join')
   joinTrip(
-    @Param('tripId') tripId: string,
+    @Param('tripId') tripId: number,
     @UserId() userId: string,
     @Body() dto: JoinTripDto,
   ): Promise<TripEntity> {
@@ -61,7 +61,7 @@ export class TripController {
 
   @Delete(':tripId/leave')
   leaveTrip(
-    @Param('tripId') tripId: string,
+    @Param('tripId') tripId: number,
     @UserId() userId: string,
   ): Promise<TripEntity> {
     return this.tripService.leaveTrip(tripId, userId);
