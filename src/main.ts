@@ -26,7 +26,7 @@ async function bootstrap(): Promise<void> {
     enableSwaggerEndpoint(app);
   }
 
-  await app.listen(443);
+  await app.listen(3000);
 }
 
 function enableSwaggerEndpoint(app: INestApplication): void {
