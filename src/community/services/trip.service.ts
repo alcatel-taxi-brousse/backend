@@ -111,4 +111,25 @@ export class TripService {
       include: this.userModel,
     });
   }
+
+  async leaveTrip(tripId: string, userId: string): Promise<TripEntity> {
+    const trip = await this.tripModel.findByPk(tripId);
+    if (!trip) {
+      throw new NotFoundException('Trip not found');
+    }
+    const rainbowUser = await this.rainbow.contacts.getContactById(userId);
+    if (!rainbowUser) {
+      throw new NotFoundException('User not found');
+    }
+    const userTrip = await this.userTripModel.findOne({
+      where: { user_id: userId, trip_id: tripId },
+    });
+    if (!userTrip) {
+      throw new BadRequestException('User did not join this trip');
+    }
+    await userTrip.destroy();
+    return this.tripModel.findByPk(tripId, {
+      include: this.userModel,
+    });
+  }
 }

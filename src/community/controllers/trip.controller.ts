@@ -1,5 +1,5 @@
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { TripEntity } from '../../common/entities/trip.entity';
 import { UserId } from '../../common/decorators/user.decorator';
 import { JoinTripDto } from '../dtos/join-trip.dto';
@@ -55,6 +55,15 @@ export class TripController {
     @UserId() userId: string,
     @Body() dto: JoinTripDto,
   ): Promise<TripEntity> {
-    return this.tripService.joinTrip(tripId, userId, dto.nbPeople);
+    const { nbPeople } = dto;
+    return this.tripService.joinTrip(tripId, userId, nbPeople);
+  }
+
+  @Delete(':tripId/leave')
+  leaveTrip(
+    @Param('tripId') tripId: string,
+    @UserId() userId: string,
+  ): Promise<TripEntity> {
+    return this.tripService.leaveTrip(tripId, userId);
   }
 }
