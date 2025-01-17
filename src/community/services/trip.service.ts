@@ -13,6 +13,7 @@ import { CommunityEntity } from '../../common/entities/community.entity';
 import { UserEntity } from '../../common/entities/user.entity';
 import { UserTripEntity } from '../../common/entities/user-trip.entity';
 import { NodeSDK as RainbowSDK } from 'rainbow-node-sdk/lib/NodeSDK';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class TripService {
@@ -109,6 +110,36 @@ export class TripService {
     });
     return this.tripModel.findByPk(tripId, {
       include: this.userModel,
+    });
+  }
+
+  async findUpcomingTripsByUser(
+    userId: string,
+    fromDate: Date,
+    toDate?: Date,
+  ): Promise<TripEntity[]> {
+    const whereClause = {
+      date: {
+        [Op.gte]: fromDate,
+      },
+    };
+    if (toDate) {
+      whereClause.date[Op.lte] = toDate;
+    }
+
+    return this.tripModel.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: UserEntity,
+          where: {
+            user_id: userId,
+          },
+        },
+        {
+          model: CommunityEntity,
+        },
+      ],
     });
   }
 }
