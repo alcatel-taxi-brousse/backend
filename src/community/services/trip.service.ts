@@ -102,8 +102,11 @@ export class TripService {
       );
     }
 
+    //await trip.$add('users', user, {
+    //  through: { nb_people: newTakenSeats },
+    //});
     await trip.$add('users', user, {
-      through: { nb_people: newTakenSeats },
+      through: { nb_people: nbPeople },
     });
     return this.tripModel.findByPk(tripId, {
       include: this.userModel,
